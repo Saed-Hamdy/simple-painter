@@ -1,5 +1,6 @@
 package mvc.controller;
 
+import mvc.model.Model;
 import mvc.view.MainGui;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import javax.swing.*;
  * Created by khlailmohammedyakout on 10/26/16.
  */
 public class MainGuiController {
-    private JFrame mainGui;
+    private MainGui mainGui;
 
     public MainGuiController() {
         // load all views
@@ -16,7 +17,10 @@ public class MainGuiController {
 
         // load all controllers
         new ToolBarController();
+        new MenuBarController();
 
+        // load model
+        Model.getModel();
 
         // controllers methods
         addListners();
@@ -40,5 +44,4 @@ public class MainGuiController {
             System.exit(0);
         }
     }
-
 }

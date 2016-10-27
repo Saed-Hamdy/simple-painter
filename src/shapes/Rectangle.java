@@ -10,6 +10,10 @@ public class Rectangle extends Polygon {
     private Point location;
     private List<Point> points;
 
+    public Rectangle() {
+        super(new ArrayList<>());
+    }
+
     public Rectangle(Point location,  Dimensions dimensions) {
         super(new ArrayList<>());
         // TODO

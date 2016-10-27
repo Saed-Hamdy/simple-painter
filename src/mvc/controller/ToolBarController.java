@@ -2,7 +2,6 @@ package mvc.controller;
 
 import mvc.view.MainGui;
 import mvc.view.ToolBarFactory;
-import sun.applet.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,6 +54,17 @@ public class ToolBarController {
             }
         }
 
+    }
+
+    public static void addNewListner(JButton button) {
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    MainGui.setOperation(MainGui.Operation.Other);
+                    MainGui.setOtherOperation(button.getText());
+                    System.out.println(MainGui.getOtherOperation());
+                }
+            });
     }
 
 }

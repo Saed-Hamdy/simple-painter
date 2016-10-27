@@ -1,16 +1,19 @@
 package mvc.controller;
 
+import mvc.model.Model;
 import mvc.view.MainGui;
 import shapes.*;
 import shapes.Point;
 import shapes.Rectangle;
+import shapes.Shape;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Line2D;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +23,8 @@ import java.util.List;
 public class PainterPanelController extends JPanel implements MouseListener, MouseMotionListener {
     private int currentX, currentY;
     private int oldX, oldY;
-    private List<Line2D> lines = new ArrayList<>();
-    private Line2D currentLine;
+    private List<Shape> shapes = new ArrayList<>();
+    private Shape currentShape;
 
     private static PainterPanelController singeltonPainterPanel;
 
@@ -44,16 +47,43 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
         switch (MainGui.getOperation()) {
             case DrawRect:
                 Rectangle rectangle = new Rectangle(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)), new Dimensions(calculateWidth(), calculateHeight()));
+                currentShape = rectangle;
                 rectangle.draw(g);
                 break;
-            case DrawOval:
-                Ellipse ellipse = new Ellipse(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)), new Dimensions(calculateWidth(), calculateHeight()));
-                ellipse.draw(g);
-                break;
+//            case DrawOval:
+//                Ellipse ellipse = new Ellipse(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)), new Dimensions(calculateWidth(), calculateHeight()));
+//                currentShape = ellipse;
+//                ellipse.draw(g);
+//                break;
             case DrawLine:
                 Line line = new Line(oldX, oldY, currentX, currentY);
+                currentShape = line;
                 line.draw(g);
                 break;
+            case Other:
+                String otherShape = MainGui.getOtherOperation();
+                String otherShapeClass = Model.getModel().getSuppotedShapesClassFiles().get(otherShape);
+                try {
+                    Constructor constructor = ClassLoader.getSystemClassLoader().loadClass(otherShapeClass).getDeclaredConstructor(Point.class, int.class);
+                    Shape shape = (Shape) constructor.newInstance(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)), calculateWidth());
+                    currentShape = shape;
+                    currentShape.draw(g);
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+
+        for(Shape shape : shapes) {
+            shape.draw(g);
         }
     }
 
@@ -71,7 +101,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        shapes.add(currentShape);
     }
 
     @Override

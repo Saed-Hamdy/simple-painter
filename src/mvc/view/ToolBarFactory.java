@@ -1,39 +1,55 @@
 package mvc.view;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by khlailmohammedyakout on 10/26/16.
  */
-public class ToolBarFactory {
-    private static JPanel toolBarPanel;
+public class ToolBarFactory extends JPanel{
+    private static ToolBarFactory toolBarPanel;
+    private List<JButton> buttons;
     private JButton drawLineButton;
     private JButton drawOvalButton;
     private JButton drawRectButton;
 
     private ToolBarFactory() {
-        toolBarPanel = new JPanel();
         initComponents();
         buildToolBar();
     }
 
-    public static JPanel getToolBarPanel() {
+    public static ToolBarFactory getToolBarPanel() {
         if (toolBarPanel == null) {
-            new ToolBarFactory();
+            toolBarPanel = new ToolBarFactory();
         }
         return toolBarPanel;
     }
 
     private void initComponents() {
+        buttons = new ArrayList<>();
         drawLineButton = new JButton("Line");
         drawOvalButton = new JButton("Oval");
         drawRectButton = new JButton("Rectangle");
+
+        buttons.add(drawLineButton);
+        buttons.add(drawOvalButton);
+        buttons.add(drawRectButton);
     }
 
     private void buildToolBar() {
-        toolBarPanel.add(drawLineButton);
-        toolBarPanel.add(drawOvalButton);
-        toolBarPanel.add(drawRectButton);
+        for(JButton button : buttons) {
+            add(button);
+            revalidate();
+            repaint();
+        }
+    }
+
+    public JButton addNewShapeButton(String shapeName) {
+        JButton newButton = new JButton(shapeName);
+        buttons.add(newButton);
+        buildToolBar();
+        return newButton;
     }
 
 }
