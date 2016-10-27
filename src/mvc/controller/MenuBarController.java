@@ -46,8 +46,8 @@ public class MenuBarController {
                                 FileFilter classFilesFilter = new FileFilter() {
                                     @Override
                                     public boolean accept(File f) {
-                                        if (!f.isDirectory()) {
-                                            return false;
+                                        if (f.isDirectory()) {
+                                            return true;
                                         }
                                         String s = f.getName();
                                         return s.endsWith(".class") || s.endsWith(".CLASS");
@@ -55,7 +55,7 @@ public class MenuBarController {
 
                                     @Override
                                     public String getDescription() {
-                                        return ".class,.CLass";
+                                        return ".class, .CLass";
                                     }
                                 };
                                 fileChooser.addChoosableFileFilter(classFilesFilter);
@@ -75,13 +75,15 @@ public class MenuBarController {
                                     try {
                                         url = file.toURI().toURL();
                                         URL[] urls = new URL[]{url};
-                                        ClassLoader cl = new URLClassLoader(urls);
-                                        Class  cls = cl.loadClass("shapes." + fileName);
-                                        addNewShape(fileName, "shapes." + fileName);
+                                        ClassLoader classLoader = new URLClassLoader(urls);
+                                        Class  aClass = classLoader.loadClass("shapes." + fileName);
+                                        addNewShape(fileName, aClass);
                                     } catch (MalformedURLException e1) {
                                         e1.printStackTrace();
+                                        mainGui.showError(e1.toString());
                                     } catch (ClassNotFoundException e1) {
                                         e1.printStackTrace();
+                                        mainGui.showError(e1.toString());
                                     }
 
                                     // Model.loadNewShape(directory + "." + fileName);
@@ -113,9 +115,9 @@ public class MenuBarController {
         }
     }
 
-    private void addNewShape(String shapeName, String directory) {
+    private void addNewShape(String shapeName, Class aClass) {
         ToolBarController.addNewListner(toolBarPanel.addNewShapeButton(shapeName));
-        Model.getModel().setSuppotedShapesClassFiles(shapeName, directory);
+        Model.getModel().setSuppotedShapesClassFiles(shapeName, aClass);
     }
 
 }

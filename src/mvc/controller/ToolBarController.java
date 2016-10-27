@@ -53,7 +53,6 @@ public class ToolBarController {
                     break;
             }
         }
-
     }
 
     public static void addNewListner(JButton button) {

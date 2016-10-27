@@ -1,8 +1,5 @@
 package mvc.model;
 
-
-import sun.applet.Main;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +8,7 @@ import java.util.Map;
  */
 public class Model {
     private static Model model;
-    private Map<String, String> suppotedShapesClassFiles;
+    private Map<String, Class> suppotedShapesClassFiles;
 
     private Model() {
         suppotedShapesClassFiles = new HashMap<>();
@@ -45,11 +42,11 @@ public class Model {
         }
     }
 
-    public Map<String, String> getSuppotedShapesClassFiles() {
+    public Map<String, Class> getSuppotedShapesClassFiles() {
         return suppotedShapesClassFiles;
     }
 
-    public void setSuppotedShapesClassFiles(String key, String value) {
+    public void setSuppotedShapesClassFiles(String key, Class value) {
         suppotedShapesClassFiles.put(key, value);
     }
 
