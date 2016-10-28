@@ -14,4 +14,5 @@ public interface Shape {
 
     public Dimensions getDimensions();
     public void setDimensions(Dimensions dimensions);
+    public boolean contain(int x,int y);
 }

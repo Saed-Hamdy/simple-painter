@@ -13,6 +13,9 @@ public class ToolBarFactory extends JPanel{
     private JButton drawLineButton;
     private JButton drawOvalButton;
     private JButton drawRectButton;
+    private JButton resizeButton;
+    private JButton deleteButton;
+    private JButton moveButton;
 
     private ToolBarFactory() {
         initComponents();
@@ -31,10 +34,18 @@ public class ToolBarFactory extends JPanel{
         drawLineButton = new JButton("Line");
         drawOvalButton = new JButton("Oval");
         drawRectButton = new JButton("Rectangle");
+        resizeButton  = new JButton("Resize");
+        deleteButton  = new JButton("Delete");
+        moveButton  = new JButton("Move");
+        
 
         buttons.add(drawLineButton);
         buttons.add(drawOvalButton);
         buttons.add(drawRectButton);
+        buttons.add(deleteButton);
+        buttons.add(resizeButton);
+        buttons.add(moveButton);
+        
     }
 
     private void buildToolBar() {

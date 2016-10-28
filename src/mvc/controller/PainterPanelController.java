@@ -26,7 +26,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
     private int currentX, currentY;
     private int oldX, oldY;
     private List<Shape> shapes = new ArrayList<>();
-    private Shape currentShape;
+    private Shape currentShape,oldshape;
 
     private static PainterPanelController singeltonPainterPanel;
 
@@ -46,10 +46,14 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if (currentX!=-1&&currentY!=-1){
         switch (MainGui.getOperation()) {
             case DrawRect:
                 Rectangle rectangle = new Rectangle(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)), new Dimensions(calculateWidth(), calculateHeight()));
                 currentShape = rectangle;
+                System.out.println(Math.min(oldX, currentX));
+                //System.out.println("rec");
+                
                 rectangle.draw(g);
                 break;
             case DrawOval:
@@ -61,6 +65,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                 Line line = new Line(oldX, oldY, currentX, currentY);
                 currentShape = line;
                 line.draw(g);
+               // System.out.println("li");
                 break;
             case Other:
                 String otherShape = MainGui.getOtherOperation();
@@ -80,14 +85,30 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                     e.printStackTrace();
                 }
                 break;
-        }
+            case Resize:
+                if(currentShape!=null){
+                currentShape.setDimensions(new Dimensions(Math.abs(currentX-currentShape.getLocation().x),Math.abs(currentY-currentShape.getLocation().y)));
+                currentShape.draw(g);
+                }
+                break;
+            case Move:
+                if(currentShape!=null){
+                currentShape.setLocation(new Point(currentX, currentY));
+                currentShape.draw(g);
+                }
+                break; 
+        }}
+        
         for(Shape shape : shapes) {
+            System.out.println("1.."+shapes.size()+"f"+shape);
             shape.draw(g);
         }
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {     
+        
+        
     }
 
     @Override
@@ -95,12 +116,60 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
         oldX = e.getX();
         oldY = e.getY();
         currentX = oldX;
-        currentX = oldY;
+        currentY = oldY;
+        switch (MainGui.getOperation()) {
+            case Resize:
+                for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
+                    Shape sh = shapes.get(i);
+                    if (sh.contain(currentX, currentY)) {
+                        currentShape = sh;
+                        shapes.remove(sh);
+                        System.out.println("ccccsize"+shapes.size());
+                        break;
+                    }
+                }
+                break;
+            case Move:
+                for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
+                    Shape sh = shapes.get(i);
+                    if (sh.contain(currentX, currentY)) {
+                        currentShape = sh;
+                        shapes.remove(sh);
+                        break;
+                    }
+                }
+                break;
+                
+                
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        shapes.add(currentShape);
+        switch (MainGui.getOperation()){
+        case Delete:
+            for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
+                Shape sh = shapes.get(i);
+                if (sh.contain(currentX, currentY)) {
+                    shapes.remove(i);
+                    
+                    break;
+                }
+            }
+                currentX=currentY=-1;
+                repaint();
+            
+            break;            
+            default:
+                if(currentShape!=null){
+                    shapes.add(currentShape);
+                    currentShape=null;
+                }
+                
+                
+         }
+        currentX=currentY=oldX=oldY=-1;
+        repaint();
     }
 
     @Override

@@ -34,10 +34,24 @@ public class Rectangle extends Polygon {
     public double area() {
         return dimensions.height * dimensions.width;
     }
+    @Override
+    public boolean contain(int x, int y) {
+        System.out.println(location.x +" DX "+getDimensions().width);
+        System.out.println(location.y +" Dy "+","+getDimensions().height);
+        System.out.println(x);
+        System.out.println(y);
+        if (x >= location.x && x <= (location.x + dimensions.width) 
+                && y >= location.y && y <= (location.y + dimensions.height))
+            {
+            System.out.println("kkk");
+            return true;
+            }
+        return false;
+    }
 
     @Override
     public void setLocation(Point location) {
-        location = location;
+        this.location = location;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package shapes;
 
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 public class Ellipse implements Shape {
     private Point location;
@@ -17,14 +18,14 @@ public class Ellipse implements Shape {
 
     @Override
     public double perimeter() {
-        return 2 * Math.PI * Math.sqrt((dimensions.width * dimensions.width + dimensions.height * dimensions.height) / 2) ;
+        return 2 * Math.PI
+                * Math.sqrt((dimensions.width * dimensions.width + dimensions.height * dimensions.height) / 2);
     }
 
     @Override
     public void draw(Graphics g) {
         g.drawOval(location.x, location.y, dimensions.width, dimensions.height);
     }
-
 
     @Override
     public Dimensions getDimensions() {
@@ -44,5 +45,11 @@ public class Ellipse implements Shape {
     @Override
     public Point getLocation() {
         return location;
+    }
+
+    public boolean contain(int x, int y) {
+        final Ellipse2D el = new Ellipse2D.Float(location.x, location.y, dimensions.width, dimensions.height);
+        System.out.println("kod");
+        return el.contains(x, y);
     }
 }

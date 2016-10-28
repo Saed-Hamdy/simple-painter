@@ -37,4 +37,8 @@ public abstract class Polygon implements Shape {
      public void setPoints(List<Point> points) {
          this.points = points;
      }
+     public boolean contain(int x, int y) {
+        
+         return false;
+     }
 }

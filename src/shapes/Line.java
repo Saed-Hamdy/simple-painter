@@ -42,4 +42,10 @@ public class Line implements Shape {
     @Override
     public void setDimensions(Dimensions dimensions) {
     }
+
+    @Override
+    public boolean contain(int x, int y) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

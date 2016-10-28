@@ -51,6 +51,33 @@ public class ToolBarController {
                         }
                     });
                     break;
+                case "Delete":
+                    buttonComponent.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainGui.setOperation(MainGui.Operation.Delete);
+                            System.out.println(MainGui.getOperation());
+                        }
+                    });
+                    break;
+                case "Move":
+                    buttonComponent.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainGui.setOperation(MainGui.Operation.Move);
+                            System.out.println(MainGui.getOperation());
+                        }
+                    });
+                    break;
+                case "Resize":
+                    buttonComponent.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainGui.setOperation(MainGui.Operation.Resize);
+                            System.out.println(MainGui.getOperation());
+                        }
+                    });
+                    break;
             }
         }
     }
