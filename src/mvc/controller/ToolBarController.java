@@ -2,7 +2,6 @@ package mvc.controller;
 
 import mvc.view.MainGui;
 import mvc.view.ToolBarFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -75,6 +74,15 @@ public class ToolBarController {
                         public void actionPerformed(ActionEvent e) {
                             MainGui.setOperation(MainGui.Operation.Resize);
                             System.out.println(MainGui.getOperation());
+                        }
+                    });
+                    break;
+                case "Colors":
+                    buttonComponent.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            new ColorChoose();
+                            
                         }
                     });
                     break;
