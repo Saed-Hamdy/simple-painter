@@ -16,6 +16,7 @@ public class MenuBarFactory {
     private JMenuItem exitMenuItem;
     private JMenuItem loadMenuItem;
     private JMenuItem saveMenuItem;
+    private JMenuItem openMenuItem;
 
     private MenuBarFactory() {
         menuBar = new JMenuBar();
@@ -41,9 +42,12 @@ public class MenuBarFactory {
         exitMenuItem = new JMenuItem("Exit");
         loadMenuItem = new JMenuItem("Load");
         saveMenuItem = new JMenuItem("Save");
+        openMenuItem = new JMenuItem("Open");
     }
 
     private void buildMenuBar() {
+        
+        fileMenu.add(openMenuItem);
         fileMenu.add(loadMenuItem);
         fileMenu.add(saveMenuItem);
         fileMenu.add(exitMenuItem);
@@ -55,6 +59,7 @@ public class MenuBarFactory {
     }
 
     private void assignShortcuts() {
+        openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
         loadMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));

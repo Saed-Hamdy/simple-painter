@@ -29,14 +29,9 @@ public class Model {
     public static void loadNewShape(String fileName) {
         try {
             ClassLoader.getSystemClassLoader().loadClass(fileName);
-            // Shape rectangle = (Shape) ClassLoader.getSystemClassLoader().loadClass("shapes.Rectangle").newInstance();
-
+            
         }
-        // catch (InstantiationException e) {
-        //  e.printStackTrace();
-        // } catch (IllegalAccessException e) {
-        //    e.printStackTrace();
-        // }
+
         catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

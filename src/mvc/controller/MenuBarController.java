@@ -3,6 +3,8 @@ package mvc.controller;
 import mvc.model.Model;
 import mvc.view.MainGui;
 import mvc.view.MenuBarFactory;
+import mvc.view.OpenFile;
+import mvc.view.SaveFile;
 import mvc.view.ToolBarFactory;
 
 import javax.swing.*;
@@ -38,6 +40,19 @@ public class MenuBarController {
             for (Component menuComponent : menuComponents) {
                 JMenuItem menuItem = (JMenuItem) menuComponent;
                 switch (menuItem.getText()) {
+                    case "Open":
+                        menuItem.addActionListener(new ActionListener() {
+    
+                            public void actionPerformed(ActionEvent e) {
+                                try {
+                                    new OpenFile();                                   
+                                } catch (ClassNotFoundException e2) {
+                                    e2.printStackTrace();
+                                }
+                            }
+                        });
+                        
+                        break;
                     case "Load":
                         menuItem.addActionListener(new ActionListener() {
                             @Override
@@ -52,7 +67,7 @@ public class MenuBarController {
                                         String s = f.getName();
                                         return s.endsWith(".class") || s.endsWith(".CLASS");
                                     }
-
+    
                                     @Override
                                     public String getDescription() {
                                         return ".class, .CLass";
@@ -64,19 +79,20 @@ public class MenuBarController {
                                     String fileName = fileChooser.getSelectedFile().getName();
                                     fileName = fileName.replace(".class", "");
                                     System.out.println(fileName);
-
+    
                                     String directory = fileChooser.getCurrentDirectory().toString();
-                                    // directory = directory.replaceAll("/", ".").replaceFirst(".", "");
+                                    // directory = directory.replaceAll("/",
+                                    // ".").replaceFirst(".", "");
                                     directory = directory.replace("/shapes", "");
                                     System.out.println(directory);
-
+    
                                     File file = new File(directory);
                                     URL url;
                                     try {
                                         url = file.toURI().toURL();
-                                        URL[] urls = new URL[]{url};
+                                        URL[] urls = new URL[] { url };
                                         ClassLoader classLoader = new URLClassLoader(urls);
-                                        Class  aClass = classLoader.loadClass("shapes." + fileName);
+                                        Class aClass = classLoader.loadClass("shapes." + fileName);
                                         addNewShape(fileName, aClass);
                                     } catch (MalformedURLException e1) {
                                         e1.printStackTrace();
@@ -85,8 +101,9 @@ public class MenuBarController {
                                         e1.printStackTrace();
                                         mainGui.showError(e1.toString());
                                     }
-
-                                    // Model.loadNewShape(directory + "." + fileName);
+    
+                                    // Model.loadNewShape(directory + "." +
+                                    // fileName);
                                 } else {
                                     System.out.println("canceled");
                                 }
@@ -97,8 +114,10 @@ public class MenuBarController {
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                fileChooser = new JFileChooser();
-                                int returnValue = fileChooser.showSaveDialog(MainGui.getMainGui());
+                                new SaveFile();
+                                // fileChooser = new JFileChooser();
+                                // int returnValue =
+                                // fileChooser.showSaveDialog(MainGui.getMainGui());
                             }
                         });
                         break;

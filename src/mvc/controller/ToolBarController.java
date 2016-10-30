@@ -1,5 +1,6 @@
 package mvc.controller;
 
+import mvc.view.ColorChoose;
 import mvc.view.MainGui;
 import mvc.view.ToolBarFactory;
 import javax.swing.*;
