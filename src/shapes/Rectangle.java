@@ -1,22 +1,17 @@
 package shapes;
 
 import mvc.controller.PainterPanelController;
+import shapes.Point;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Rectangle extends Polygon {
+public class Rectangle implements Shape {
     private Dimensions dimensions;
     private Point location;
-    private List<Point> points;
-
-    public Rectangle() {
-        super(new ArrayList<>());
-    }
+    private Color color = Color.black;
+    private Color fillColor = null;
 
     public Rectangle(Point location, Dimensions dimensions) {
-        super(new ArrayList<>()); // TODO
 
         this.location = location;
         this.dimensions = dimensions;
@@ -24,17 +19,17 @@ public class Rectangle extends Polygon {
 
     @Override
     public void draw(Graphics g) {
-        if (super.getFillColor() == null) {
-            g.setColor(super.getColor());
-            g.drawRect(location.x, location.y, dimensions.width, dimensions.height);
-
+        if (fillColor == null) {
+            g.setColor(color);
+            g.drawRect(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
+                    dimensions.height < 0 ? 0 : dimensions.height);
             if (PainterPanelController.getPainterPanel().shouldSelect) {
                 g.setColor(new Color(0, 0, 0, 20));
                 g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
             }
         } else {
-            g.setColor(super.getFillColor());
-            g.fillRect(location.x, location.y, dimensions.width, dimensions.height);         
+            g.setColor(fillColor);
+            g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
         }
 
     }
@@ -76,14 +71,34 @@ public class Rectangle extends Polygon {
         this.dimensions = dimensions;
     }
 
-    @Override
-    public List<Point> getPoints() {
-        return points;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     @Override
-    public void setPoints(List<Point> points) {
-        this.points = points;
+    public Color getColor() {
+
+        return color;
+    }
+
+    public void setFillColor(Color color) {
+        fillColor = color;
+    }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    @Override
+    public void move(int x1, int y1, int x2, int y2) {
+        location.x += x2 - x1;
+        location.y += y2 - y1;
+    }
+
+    @Override
+    public void resize(int x1, int y1, int x2, int y2) {
+        dimensions.width =(dimensions.width + x2 - x1);
+        dimensions.height = (dimensions.height + y2 - y1);
     }
 
     @Override
@@ -93,4 +108,5 @@ public class Rectangle extends Polygon {
         rectangle.setFillColor(getFillColor());
         return rectangle;
     }
+
 }

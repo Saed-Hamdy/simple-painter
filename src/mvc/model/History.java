@@ -21,7 +21,7 @@ public class History {
 
     public History() {
         primaryHistoryStack = new Stack<>();
-        primaryHistoryStack.push(new ArrayList<>());
+        primaryHistoryStack.push(new ArrayList<Shape>());
         secondaryHistoryStack = new Stack<>();
         limit = MAX_INITIAL_LIMIT;
     }

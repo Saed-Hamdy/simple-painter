@@ -28,4 +28,8 @@ public interface Shape {
     public Color getFillColor();
 
     public Object clone() throws CloneNotSupportedException;
+
+    public void move(int x1, int y1, int x2, int y2);
+
+    public void resize(int x1, int y1, int x2, int y2);
 }
