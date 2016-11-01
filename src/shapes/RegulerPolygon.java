@@ -3,12 +3,9 @@ package shapes;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.print.attribute.standard.Sides;
-
 import mvc.controller.PainterPanelController;
 
-public class Polygon implements Shape {
+public class RegulerPolygon extends Polygon{
     private List<Point> points = new ArrayList<>();
     private Point location;
     Dimensions dimensions;
@@ -16,7 +13,7 @@ public class Polygon implements Shape {
     private Color fillColor = null;
     private int NunuOfSides;
 
-    public Polygon(Point location, Dimensions dimensions, int sides) {
+    public RegulerPolygon(Point location, Dimensions dimensions, int sides) {
 
         this.dimensions = dimensions;
         NunuOfSides = sides;
@@ -43,7 +40,7 @@ public class Polygon implements Shape {
 
     }
 
-    public Polygon(List<Point> points) {
+    public RegulerPolygon(List<Point> points) {
         this.color = PainterPanelController.selectedColor;
         this.points = points;
         NunuOfSides = points.size();
@@ -126,7 +123,7 @@ public class Polygon implements Shape {
     }
 
     public Object clone() throws CloneNotSupportedException {
-        Polygon polyg = new Polygon(points);
+        RegulerPolygon polyg = new RegulerPolygon(points);
         polyg.setColor(getColor());
         polyg.setFillColor(getFillColor());
         return polyg;
@@ -167,18 +164,7 @@ public class Polygon implements Shape {
     @Override
     public void resize(int x1, int y1, int x2, int y2) {
         
-        
         System.out.println("yes resize");
-//        double signe=(Math.sqrt((x2-location.x)*(x2-location.x)+(y2-location.y)*(y2-location.y))
-//                - Math.sqrt((x1-location.x)*(x1-location.x)+(y1-location.y)*(y1-location.y)));
-//        int rr=(int)(Math.sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1)));
-//        System.out.println(signe+"/"+rr);
-//        Point p=points.get(0);
-//        
-//        int length=(int)(Math.sqrt((p.x-location.x)*(p.x-location.x)+(p.y-location.y)*(p.y-location.y)));
-//        System.out.println(signe);
-//        dimensions .width+=signe/Math.abs(signe)*dimensions.width/length;
-//        dimensions .height+=signe/Math.abs(signe)*dimensions.height/length;
         dimensions.width+=x2-x1;
         dimensions.height+=y2-y1;
         intialize();

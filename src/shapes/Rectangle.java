@@ -5,14 +5,15 @@ import shapes.Point;
 
 import java.awt.*;
 
-public class Rectangle implements Shape {
+public class Rectangle extends RegulerPolygon {
     private Dimensions dimensions;
     private Point location;
     private Color color = Color.black;
     private Color fillColor = null;
+    private final static int sides = 4;
 
     public Rectangle(Point location, Dimensions dimensions) {
-
+        super(location, dimensions, sides);
         this.location = location;
         this.dimensions = dimensions;
     }
@@ -97,7 +98,7 @@ public class Rectangle implements Shape {
 
     @Override
     public void resize(int x1, int y1, int x2, int y2) {
-        dimensions.width =(dimensions.width + x2 - x1);
+        dimensions.width = (dimensions.width + x2 - x1);
         dimensions.height = (dimensions.height + y2 - y1);
     }
 

@@ -6,7 +6,9 @@ import mvc.view.MainGuiView;
 import shapes.Dimensions;
 import shapes.Point;
 import shapes.Rectangle;
+import shapes.RegulerPolygon;
 import shapes.Shape;
+import shapes.Triangle;
 import shapes.Ellipse;
 import shapes.Line;
 
@@ -14,6 +16,7 @@ import javax.swing.JPanel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -62,6 +65,13 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
         if (currentX != -1 && currentY != -1) {
             switch (MainGuiView.getOperation()) {
+            case DrawTriangle:
+                Triangle triangle = new Triangle(new Point(oldX, oldY),
+                        new Dimensions(currentX - oldX, currentY - oldY));
+                currentShape = triangle;
+
+                triangle.draw(g);
+                break;
             case DrawRect:
                 Rectangle rectangle = new Rectangle(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
                         new Dimensions(calculateWidth(), calculateHeight()));
@@ -81,17 +91,27 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                 line.draw(g);
                 break;
             case Other:
+                // changed
                 String otherShape = MainGuiView.getOtherOperation();
                 Class otherShapeClass = Model.getModel().getSuppotedShapesClassFiles().get(otherShape);
                 try {
                     Shape tempShape = (Shape) otherShapeClass.newInstance();
+                    if (tempShape instanceof RegulerPolygon) {
+                        Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
 
-                    Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
-                    Shape shape = (Shape) constructor.newInstance(
-                            new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
-                            new Dimensions(calculateWidth(), calculateHeight()));
-                    currentShape = shape;
-                    currentShape.draw(g);
+                        Shape shape = (Shape) constructor.newInstance(new Point(oldX, oldY),
+                                new Dimensions(currentX - oldX, currentY - oldY));
+                        currentShape = shape;
+                        currentShape.draw(g);
+                    } else {
+                        Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
+
+                        Shape shape = (Shape) constructor.newInstance(
+                                new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
+                                new Dimensions(calculateWidth(), calculateHeight()));
+
+                    }
+
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
@@ -157,7 +177,6 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("mouse pressed");
         List<Shape> shapes = Model.getModel().getShapes();
         oldX = e.getX();
         oldY = e.getY();

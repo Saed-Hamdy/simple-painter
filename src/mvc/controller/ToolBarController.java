@@ -20,101 +20,110 @@ public class ToolBarController {
 
     void addListners() {
         Component[] components = toolBarPanel.getComponents();
-        for(Component component : components) {
+        for (Component component : components) {
             JButton buttonComponent = (JButton) component;
             switch (buttonComponent.getText()) {
-                case "Line":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.DrawLine);
-                            System.out.println(MainGuiView.getOperation());
-                        }
-                    });
-                    break;
-                case "Oval":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.DrawOval);
-                            System.out.println(MainGuiView.getOperation());
-                        }
-                    });
-                    break;
-                case "Rectangle":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.DrawRect);
-                            System.out.println(MainGuiView.getOperation());
-                        }
-                    });
-                    break;
-                case "Delete":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.Delete);
-                            System.out.println(MainGuiView.getOperation());
-                        }
-                    });
-                    break;
-                case "Move":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.Move);
-                            System.out.println(MainGuiView.getOperation());
-                        }
-                    });
-                    break;
-                case "Resize":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.Resize);
-                            System.out.println(MainGuiView.getOperation());
-                        }
-                    });
-                    break;
-                case "Colors":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            new ColorChooser();
-                        }
-                    });
-                    break;
+            case "Triangle":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.DrawTriangle);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Line":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.DrawLine);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Oval":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.DrawOval);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Rectangle":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.DrawRect);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Delete":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.Delete);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Move":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.Move);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Resize":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.Resize);
+                        System.out.println(MainGuiView.getOperation());
+                    }
+                });
+                break;
+            case "Colors":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        new ColorChooser();
+                    }
+                });
+                break;
 
-                case "Select":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.Select);
-                        }
-                    });
-                    break;
-                case "Fill":
-                    buttonComponent.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            MainGuiView.setOperation(MainGuiView.Operation.Fill);
-                        }
-                    });
-                    break;
+            case "Select":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.Select);
+                    }
+                });
+                break;
+            case "Fill":
+                buttonComponent.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        MainGuiView.setOperation(MainGuiView.Operation.Fill);
+                    }
+                });
+                break;
             }
         }
     }
 
-    public static void addNewListner(JButton button) {
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    MainGuiView.setOperation(MainGuiView.Operation.Other);
-                    MainGuiView.setOtherOperation(button.getText());
-                    System.out.println(MainGuiView.getOtherOperation());
-                }
-            });
+    public static void addNewListner(final JButton button) {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainGuiView.setOperation(MainGuiView.Operation.Other);
+                MainGuiView.setOtherOperation(button.getText());
+                System.out.println(MainGuiView.getOtherOperation());
+            }
+        });
     }
 
 }
