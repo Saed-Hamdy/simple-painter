@@ -25,6 +25,27 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 @SuppressWarnings("serial")
 public class SaveFile extends JFrame {
+    public String toStringJson (){
+        XStream json = new XStream(new JettisonMappedXmlDriver());
+        DataOfShapes data = new DataOfShapes();
+        data.setListOfshapes(Model.getModel().getShapes());
+        json.setMode(XStream.NO_REFERENCES);
+        json.alias("data", DataOfShapes.class);
+        return json.toXML(data);
+        
+    }
+    /**
+     * 
+     * @param jsonStr
+     */
+    public void ToShapes(String jsonStr){
+        DataOfShapes data;
+        XStream json = new XStream(new JettisonMappedXmlDriver());
+        json.alias("data", DataOfShapes.class);
+        data = (DataOfShapes) json.fromXML(jsonStr);
+        Model.getModel().setShapes(data.getListOfStates());        
+    }
+    
     public SaveFile() {
 
         JFileChooser saveFile = new JFileChooser();
@@ -35,9 +56,10 @@ public class SaveFile extends JFrame {
         if (sf == JFileChooser.APPROVE_OPTION) {
             String ext = "";
             String extension = saveFile.getFileFilter().getDescription();           
-            if (extension.equals(".png,.PNG")) {
+            if (extension.equals(".png,.PNG")||saveFile.getSelectedFile().toString().endsWith(".xml")) {
                 ext = ".png";
-                saveFile.setSelectedFile(new File(saveFile.getSelectedFile().toString() + ext));
+                if(!saveFile.getSelectedFile().toString().endsWith(ext))
+                    saveFile.setSelectedFile(new File(saveFile.getSelectedFile().toString() + ext));
                 try {
                     BufferedImage bi = new BufferedImage(MainGuiView.getMainGuiView().getSize().width,
                             MainGuiView.getMainGuiView().getSize().height, BufferedImage.TYPE_INT_ARGB);
@@ -58,27 +80,33 @@ public class SaveFile extends JFrame {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (extension.equals(".json,.JSON")) {
+            } else if (extension.equals(".json,.JSON")||saveFile.getSelectedFile().toString().endsWith(".json")) 
+            {
                 ext = ".json";
+                if(!saveFile.getSelectedFile().toString().endsWith(ext))
+                    saveFile.setSelectedFile(new File(saveFile.getSelectedFile().toString() + ext));
                 XStream json = new XStream(new JettisonMappedXmlDriver());
                 DataOfShapes data = new DataOfShapes();
                 data.setListOfshapes(Model.getModel().getShapes());
+                data.setImageDirctory(OpenFile.imageDirectory);
                 json.setMode(XStream.NO_REFERENCES);
                 json.alias("data", DataOfShapes.class);
-                try (FileWriter writer = new FileWriter(saveFile.getSelectedFile().toString() + ".json")) {
+                try (FileWriter writer = new FileWriter(saveFile.getSelectedFile().toString())) {
                     writer.write(json.toXML(data));
 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (extension.equals(".xml,.XML")) {
+            } else if (extension.equals(".xml,.XML")||saveFile.getSelectedFile().toString().endsWith(".xml")) {
                 ext = ".xml";
-
+                if(!saveFile.getSelectedFile().toString().endsWith(ext))
+                    saveFile.setSelectedFile(new File(saveFile.getSelectedFile().toString() + ext));
                 XStream xml = new XStream(new StaxDriver());
                 DataOfShapes data = new DataOfShapes();
                 data.setListOfshapes(Model.getModel().getShapes());
+                data.setImageDirctory(OpenFile.imageDirectory);
                 xml.alias("data", DataOfShapes.class);
-                try (FileWriter writer = new FileWriter(saveFile.getSelectedFile().toString() + ext)) {
+                try (FileWriter writer = new FileWriter(saveFile.getSelectedFile().toString())) {
                     writer.write(xml.toXML(data));
 
                 } catch (IOException e) {
