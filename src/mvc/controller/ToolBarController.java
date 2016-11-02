@@ -28,7 +28,6 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawTriangle);
-                        System.out.println(MainGuiView.getOperation());
                     }
                 });
                 break;
@@ -37,7 +36,6 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawLine);
-                        System.out.println(MainGuiView.getOperation());
                     }
                 });
                 break;
@@ -46,7 +44,6 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawOval);
-                        System.out.println(MainGuiView.getOperation());
                     }
                 });
                 break;
@@ -55,7 +52,6 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawRect);
-                        System.out.println(MainGuiView.getOperation());
                     }
                 });
                 break;
@@ -64,53 +60,10 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.Delete);
-                        System.out.println(MainGuiView.getOperation());
-                    }
-                });
-                break;
-            case "Move":
-                buttonComponent.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        MainGuiView.setOperation(MainGuiView.Operation.Move);
-                        System.out.println(MainGuiView.getOperation());
-                    }
-                });
-                break;
-            case "Resize":
-                buttonComponent.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        MainGuiView.setOperation(MainGuiView.Operation.Resize);
-                        System.out.println(MainGuiView.getOperation());
-                    }
-                });
-                break;
-            case "Colors":
-                buttonComponent.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        new ColorChooser();
                     }
                 });
                 break;
 
-            case "Select":
-                buttonComponent.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        MainGuiView.setOperation(MainGuiView.Operation.Select);
-                    }
-                });
-                break;
-            case "Fill":
-                buttonComponent.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        MainGuiView.setOperation(MainGuiView.Operation.Fill);
-                    }
-                });
-                break;
             }
         }
     }
@@ -121,7 +74,6 @@ public class ToolBarController {
             public void actionPerformed(ActionEvent e) {
                 MainGuiView.setOperation(MainGuiView.Operation.Other);
                 MainGuiView.setOtherOperation(button.getText());
-                System.out.println(MainGuiView.getOtherOperation());
             }
         });
     }

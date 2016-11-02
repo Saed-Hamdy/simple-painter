@@ -43,108 +43,106 @@ public class MenuBarController {
             for (Component menuComponent : menuComponents) {
                 JMenuItem menuItem = (JMenuItem) menuComponent;
                 switch (menuItem.getText()) {
-                    case "Open":
-                        menuItem.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
+                case "Open":
+                    menuItem.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            try {
+                                new OpenFile();
+                            } catch (ClassNotFoundException e2) {
+                                e2.printStackTrace();
+                            }
+                        }
+                    });
+                    break;
+
+                case "Load":
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            fileChooser = new JFileChooser();
+                            FileFilter classFilesFilter = new FileFilter() {
+                                @Override
+                                public boolean accept(File f) {
+                                    if (f.isDirectory()) {
+                                        return true;
+                                    }
+                                    String s = f.getName();
+                                    return s.endsWith(".class") || s.endsWith(".CLASS");
+                                }
+
+                                @Override
+                                public String getDescription() {
+                                    return ".class, .CLass";
+                                }
+                            };
+                            fileChooser.addChoosableFileFilter(classFilesFilter);
+                            int returnValue = fileChooser.showOpenDialog(MainGuiView.getMainGuiView());
+                            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                                String fileName = fileChooser.getSelectedFile().getName();
+                                fileName = fileName.replace(".class", "");
+
+                                String directory = fileChooser.getCurrentDirectory().toString();
+                                // directory = directory.replaceAll("/",
+                                // ".").replaceFirst(".", "");
+                                directory = directory.replace("/shapes", "");
+
+                                File file = new File(directory);
+                                URL url;
                                 try {
-                                    new OpenFile();
-                                } catch (ClassNotFoundException e2) {
-                                    e2.printStackTrace();
+                                    url = file.toURI().toURL();
+                                    URL[] urls = new URL[] { url };
+                                    ClassLoader classLoader = new URLClassLoader(urls);
+                                    Class aClass = classLoader.loadClass("shapes." + fileName);
+                                    addNewShape(fileName, aClass);
+                                } catch (MalformedURLException e1) {
+                                    e1.printStackTrace();
+                                    mainGuiView.showError(e1.toString());
+                                } catch (ClassNotFoundException e1) {
+                                    e1.printStackTrace();
+                                    mainGuiView.showError(e1.toString());
                                 }
-                            }
-                        });
-                        break;
 
-                    case "Load":
-                        menuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                fileChooser = new JFileChooser();
-                                FileFilter classFilesFilter = new FileFilter() {
-                                    @Override
-                                    public boolean accept(File f) {
-                                        if (f.isDirectory()) {
-                                            return true;
-                                        }
-                                        String s = f.getName();
-                                        return s.endsWith(".class") || s.endsWith(".CLASS");
-                                    }
-
-                                    @Override
-                                    public String getDescription() {
-                                        return ".class, .CLass";
-                                    }
-                                };
-                                fileChooser.addChoosableFileFilter(classFilesFilter);
-                                int returnValue = fileChooser.showOpenDialog(MainGuiView.getMainGuiView());
-                                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                                    String fileName = fileChooser.getSelectedFile().getName();
-                                    fileName = fileName.replace(".class", "");
-                                    System.out.println(fileName);
-
-                                    String directory = fileChooser.getCurrentDirectory().toString();
-                                    // directory = directory.replaceAll("/", ".").replaceFirst(".", "");
-                                    directory = directory.replace("/shapes", "");
-                                    System.out.println(directory);
-
-                                    File file = new File(directory);
-                                    URL url;
-                                    try {
-                                        url = file.toURI().toURL();
-                                        URL[] urls = new URL[]{url};
-                                        ClassLoader classLoader = new URLClassLoader(urls);
-                                        Class  aClass = classLoader.loadClass("shapes." + fileName);
-                                        addNewShape(fileName, aClass);
-                                    } catch (MalformedURLException e1) {
-                                        e1.printStackTrace();
-                                        mainGuiView.showError(e1.toString());
-                                    } catch (ClassNotFoundException e1) {
-                                        e1.printStackTrace();
-                                        mainGuiView.showError(e1.toString());
-                                    }
-
-                                    // Model.loadNewShape(directory + "." + fileName);
-                                } else {
-                                    System.out.println("canceled");
-                                }
+                                // Model.loadNewShape(directory + "." +
+                                // fileName);
                             }
-                        });
-                        break;
-                    case "Save":
-                        menuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                new SaveFile();
-                            }
-                        });
-                        break;
-                    case "Exit":
-                        menuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                mainGuiView.showConfirm("Sure");
-                            }
-                        });
-                        break;
-                    case "Redo":
-                        menuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                PainterPanelController.getPainterPanel().doneSelecting();
-                                new RedoCommand().execute();
-                            }
-                        });
-                        break;
+                        }
+                    });
+                    break;
+                case "Save":
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            new SaveFile();
+                        }
+                    });
+                    break;
+                case "Exit":
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            mainGuiView.showConfirm("Sure");
+                        }
+                    });
+                    break;
+                case "Redo":
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            PainterPanelController.getPainterPanel().doneSelecting();
+                            new RedoCommand().execute();
+                        }
+                    });
+                    break;
 
-                    case "Undo":
-                        menuItem.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                PainterPanelController.getPainterPanel().doneSelecting();
-                                new UndoCommand().execute();
-                            }
-                        });
-                        break;
+                case "Undo":
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            PainterPanelController.getPainterPanel().doneSelecting();
+                            new UndoCommand().execute();
+                        }
+                    });
+                    break;
                 }
             }
         }

@@ -1,7 +1,19 @@
 package shapes;
+/**
+ * class circle
+ * 
+ * @author said
+ *
+ */
 
 public class Circle extends Ellipse {
+    /**
+     * location of the shape
+     */
     private Point location;
+    /**
+     * radius of the circle
+     */
     private int radius;
 
     public Circle (Point location, int radius) {

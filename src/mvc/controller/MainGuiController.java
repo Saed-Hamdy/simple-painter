@@ -23,6 +23,7 @@ public class MainGuiController {
 
         // load all controllers
         new ToolBarController();
+        new OprationBarController();
         new MenuBarController();
 
         // controllers methods

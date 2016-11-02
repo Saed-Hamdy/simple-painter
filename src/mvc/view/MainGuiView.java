@@ -15,10 +15,12 @@ public class MainGuiView extends JFrame {
 
     private JPanel painterPanel;
     private JPanel toolBarPanel;
+    private JPanel operationBarPanel;
     private JMenuBar menuBar;
 
     public enum Operation {
         DrawOval,
+        DrawTriangle,
         DrawLine,
         DrawRect,
         Resize,
@@ -34,7 +36,8 @@ public class MainGuiView extends JFrame {
         setVisible(true);
         setTitle("Painter");
         setSize(1000, 700);
-        setResizable(false);
+        setResizable(true);
+        setMinimumSize(this.size());
         setLocation(100, 0);
         initComponents();
     }
@@ -51,16 +54,21 @@ public class MainGuiView extends JFrame {
 
         menuBar = MenuBarFactory.getMenuBar();
         toolBarPanel = ToolBarFactory.getToolBarPanel();
+        operationBarPanel=OprationBarFactory.getOprationBarPanel();
         painterPanel = PainterPanelController.getPainterPanel();
 
         setJMenuBar(menuBar);
         add(toolBarPanel);
+        add(operationBarPanel);
         add(painterPanel);
 
         FlowLayout flowLayout = (FlowLayout) toolBarPanel.getLayout();
-        flowLayout.setAlignment(FlowLayout.LEFT);
+        flowLayout.setAlignment(FlowLayout.LEFT);        
         toolBarPanel.setBackground(Color.darkGray);
         add(toolBarPanel, BorderLayout.NORTH);
+        operationBarPanel.setLayout(new BoxLayout(operationBarPanel,BoxLayout.Y_AXIS));
+        operationBarPanel.setBackground(Color.darkGray);
+        add(operationBarPanel, BorderLayout.WEST);
     }
 
     public void showError(String message) {

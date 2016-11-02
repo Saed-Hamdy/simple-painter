@@ -2,15 +2,39 @@ package shapes;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-
-import mvc.controller.MainGuiController;
 import mvc.controller.PainterPanelController;
 
+/**
+ * Class of 2DEllipse
+ * @author Ys team
+ *
+ */
+
 public class Ellipse implements Shape {
+    /**
+     * location of the shape
+     */
     private Point location;
+    /**
+     * Dimensions of the shape
+     */
     private Dimensions dimensions;
+    /**
+     * shape color default is black
+     */
     private Color color = Color.black;
+
+    /**
+     * shape area color default null
+     */
+
     private Color fillColor = null;
+
+    /**
+     * constructor 
+     * @param points
+     *            of the shape
+     */
 
     public Ellipse(Point location, Dimensions dimensions) {
         color = PainterPanelController.selectedColor;

@@ -6,14 +6,32 @@ import shapes.Point;
 import java.awt.*;
 
 public class Rectangle extends RegulerPolygon {
-    private Dimensions dimensions;
+    /**
+     * location of the shape
+     */
     private Point location;
+    /**
+     * Dimensions of the shape
+     */
+    private Dimensions dimensions;
+    /**
+     * shape color default is black
+     */
     private Color color = Color.black;
+
+    /**
+     * shape area color default null
+     */
+
     private Color fillColor = null;
+    /**
+     * number of shape sides
+     */
     private final static int sides = 4;
 
     public Rectangle(Point location, Dimensions dimensions) {
         super(location, dimensions, sides);
+        color=PainterPanelController.selectedColor;
         this.location = location;
         this.dimensions = dimensions;
     }

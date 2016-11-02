@@ -4,16 +4,32 @@ import java.awt.Color;
 import java.awt.Graphics;
 import mvc.controller.PainterPanelController;
 
+/**
+ * 
+ * @author YS team
+ * class 2Dline 
+ */
+
 public class Line implements Shape, Cloneable {
-    private int x1;
-    private int y1;
-    private int x2;
-    private int y2;
+    /**
+     * location of the shape
+     */
     private Point location;
-    private Color color = Color.black;
-    private Color fillColor = null;
+    /**
+     * Dimensions of the shape
+     */
     private Dimensions dimensions;
-    
+    /**
+     * shape color default is black
+     */
+    private Color color = Color.black;
+
+    /**
+     * shape area color default null
+     */
+
+    private Color fillColor = null;
+
 
     public Line(int x1, int y1, int x2, int y2) {
         color = PainterPanelController.selectedColor;
@@ -21,6 +37,11 @@ public class Line implements Shape, Cloneable {
         location = new Point(x1, y1);
         dimensions = new Dimensions(x2 - x1, y2 - y1);
 
+    }
+    public Line(Point location,Dimensions dimensions){
+        color = PainterPanelController.selectedColor;
+        this.location=location;
+        this.dimensions=dimensions;
     }
 
     public void draw(Graphics g) {
@@ -103,7 +124,7 @@ public class Line implements Shape, Cloneable {
 
     @Override
     public Object clone() throws CloneNotSupportedException {
-        Line clonedShape = new Line(this.x1, this.y1, this.x2, this.y2);
+        Line clonedShape = new Line(this.location, this.dimensions);
         clonedShape.setColor(clonedShape.getColor());
         clonedShape.setFillColor(clonedShape.getColor());
         return clonedShape;
