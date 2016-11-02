@@ -1,9 +1,18 @@
 package mvc.view;
 
 import mvc.controller.PainterPanelController;
+import mvc.model.Model;
+import server.Client;
+import shapes.*;
+import shapes.Shape;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created on 10/26/16.
@@ -27,11 +36,11 @@ public class MainGuiView extends JFrame {
         Move,
         Fill,
         Select,
-        Other;
+        Other, DrawTriangle;
     }
 
     private MainGuiView() {
-        setVisible(true);
+        // setVisible(true);
         setTitle("Painter");
         setSize(1000, 700);
         setResizable(false);
@@ -67,15 +76,12 @@ public class MainGuiView extends JFrame {
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-
-
     public void showConfirm(String message) {
         int selectedValue = JOptionPane.showConfirmDialog(null, message, "", JOptionPane.YES_NO_OPTION);
         if (selectedValue == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }
-
 
     public static Operation getOperation() {
         return operation;
@@ -92,4 +98,5 @@ public class MainGuiView extends JFrame {
     public static String getOtherOperation() {
         return otherOperation;
     }
+
 }

@@ -1,5 +1,6 @@
 package mvc.controller;
 
+import mvc.model.History;
 import mvc.model.Model;
 import mvc.model.RedoCommand;
 import mvc.model.UndoCommand;
@@ -19,9 +20,10 @@ import java.net.URLClassLoader;
 
 import mvc.view.OpenFile;
 import mvc.view.SaveFile;
+import server.Login;
 
 /**
- * Created by khlailmohammedyakout on 10/26/16.
+ * Created by ahmedyakout on 10/26/16.
  */
 public class MenuBarController {
     private JMenuBar menuBar;
@@ -41,6 +43,7 @@ public class MenuBarController {
         for (Component component : components) {
             Component[] menuComponents = ((JMenu) component).getMenuComponents();
             for (Component menuComponent : menuComponents) {
+                if(menuComponent instanceof JSeparator) continue;
                 JMenuItem menuItem = (JMenuItem) menuComponent;
                 switch (menuItem.getText()) {
                     case "Open":
@@ -55,7 +58,7 @@ public class MenuBarController {
                         });
                         break;
 
-                    case "Load":
+                    case "Add plug-in":
                         menuItem.addActionListener(new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
@@ -142,6 +145,37 @@ public class MenuBarController {
                             public void actionPerformed(ActionEvent e) {
                                 PainterPanelController.getPainterPanel().doneSelecting();
                                 new UndoCommand().execute();
+                            }
+                        });
+                        break;
+
+                    case "Set history limit":
+                        menuItem.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                History history = Model.getModel().getHistory();
+                                String input = JOptionPane.showInputDialog("please select limit" +
+                                        " (current limit is " + history.getLimit() + ")");
+                                if(input != null && !input.equals("")) {
+                                    history.setLimit(Integer.parseInt(input));
+                                }
+                            }
+                        });
+                        break;
+
+                    case "Share your painter":
+                        menuItem.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                JFrame login = new Login();
+                                login.setVisible(true);
+                            }
+                        });
+                        break;
+
+                    case "About":
+                        menuItem.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                JOptionPane.showMessageDialog(null, "version 1.0\n\nDeveloped with love " +
+                                        "by:\nAhmed Yakout\nSaed Hamdy");
                             }
                         });
                         break;

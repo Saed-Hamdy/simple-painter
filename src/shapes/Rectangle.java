@@ -6,17 +6,20 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rectangle extends Polygon {
+public class Rectangle implements Shape {
+
     private Dimensions dimensions;
     private Point location;
-    private List<Point> points;
+    // private List<Point> points;
+    private Color color = Color.black;
+    private Color fillColor = null;
 
     public Rectangle() {
-        super(new ArrayList<>());
+        // super(new ArrayList<>());
     }
 
     public Rectangle(Point location, Dimensions dimensions) {
-        super(new ArrayList<>()); // TODO
+        // super(new ArrayList<>()); // TODO
 
         this.location = location;
         this.dimensions = dimensions;
@@ -24,8 +27,8 @@ public class Rectangle extends Polygon {
 
     @Override
     public void draw(Graphics g) {
-        if (super.getFillColor() == null) {
-            g.setColor(super.getColor());
+        if (getFillColor() == null) {
+            g.setColor(getColor());
             g.drawRect(location.x, location.y, dimensions.width, dimensions.height);
 
             if (PainterPanelController.getPainterPanel().shouldSelect) {
@@ -33,7 +36,7 @@ public class Rectangle extends Polygon {
                 g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
             }
         } else {
-            g.setColor(super.getFillColor());
+            g.setColor(getFillColor());
             g.fillRect(location.x, location.y, dimensions.width, dimensions.height);         
         }
 
@@ -76,15 +79,15 @@ public class Rectangle extends Polygon {
         this.dimensions = dimensions;
     }
 
-    @Override
-    public List<Point> getPoints() {
-        return points;
-    }
-
-    @Override
-    public void setPoints(List<Point> points) {
-        this.points = points;
-    }
+//    @Override
+//    public List<Point> getPoints() {
+//        return points;
+//    }
+//
+//    @Override
+//    public void setPoints(List<Point> points) {
+//        this.points = points;
+//    }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
@@ -92,5 +95,35 @@ public class Rectangle extends Polygon {
         rectangle.setColor(getColor());
         rectangle.setFillColor(getFillColor());
         return rectangle;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    @Override
+    public Color getColor() {
+
+        return color;
+    }
+
+    public void setFillColor(Color color) {
+        fillColor = color;
+    }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    @Override
+    public void move(int x1, int y1, int x2, int y2) {
+        location.x += x2 - x1;
+        location.y += y2 - y1;
+    }
+
+    @Override
+    public void resize(int x1, int y1, int x2, int y2) {
+        dimensions.width =(dimensions.width + x2 - x1);
+        dimensions.height = (dimensions.height + y2 - y1);
     }
 }

@@ -18,23 +18,13 @@ public class Ellipse implements Shape {
         this.dimensions = dimensions;
     }
 
-    // TODO: DELTE
-//    public double area() {
-//        return Math.PI * dimensions.height * dimensions.width;
-//    }
-
-    // TODO: delete
-//    @Override
-//    public double perimeter() {
-//        return 2 * Math.PI
-//                * Math.sqrt((dimensions.width * dimensions.width + dimensions.height * dimensions.height) / 2);
-//    }
-
     @Override
     public void draw(Graphics g) {
         if (getFillColor() == null) {
             g.setColor(getColor());
-            g.drawOval(location.x, location.y, dimensions.width, dimensions.height);
+            // g.drawOval(location.x, location.y, dimensions.width, dimensions.height);
+            g.drawOval(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
+                    dimensions.height < 0 ? 0 : dimensions.height);
 
             if (PainterPanelController.getPainterPanel().shouldSelect) {
                 g.setColor(new Color(0, 0, 0, 20));
@@ -68,7 +58,9 @@ public class Ellipse implements Shape {
     }
 
     public boolean contain(int x, int y) {
-        final Ellipse2D el = new Ellipse2D.Float(location.x, location.y, dimensions.width, dimensions.height);
+//        final Ellipse2D el = new Ellipse2D.Float(location.x, location.y, dimensions.width, dimensions.height);
+        final Ellipse2D el = new Ellipse2D.Float(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
+                dimensions.height < 0 ? 0 : dimensions.height);
         return el.contains(x, y);
     }
 
@@ -98,5 +90,15 @@ public class Ellipse implements Shape {
         copyEllipse.setFillColor(getFillColor());
         copyEllipse.setColor(getColor());
         return copyEllipse;
+    }
+
+    public void move(int x1, int y1, int x2, int y2) {
+        location.x += x2 - x1;
+        location.y += y2 - y1;
+    }
+
+    public void resize(int x1, int y1, int x2, int y2) {
+        dimensions.width = (dimensions.width + x2 - x1);
+        dimensions.height = (dimensions.height + y2 - y1);
     }
 }

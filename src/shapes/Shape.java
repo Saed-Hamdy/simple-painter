@@ -2,30 +2,35 @@ package shapes;
 
 import java.awt.Graphics;
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  * @author YSteam
  */
-public interface Shape {
-    public void draw(Graphics g);
+public interface Shape extends Serializable {
+    void draw(Graphics g);
 
-    public void setLocation(Point location);
+    void setLocation(Point location);
 
-    public Point getLocation();
+    Point getLocation();
 
-    public Dimensions getDimensions();
+    Dimensions getDimensions();
 
-    public void setDimensions(Dimensions dimensions);
+    void setDimensions(Dimensions dimensions);
 
-    public boolean contain(int x, int y);
+    boolean contain(int x, int y);
 
-    public void setColor(Color color);
+    void setColor(Color color);
 
-    public Color getColor();
+    Color getColor();
 
-    public void setFillColor(Color color);
+    void setFillColor(Color color);
 
-    public Color getFillColor();
+    Color getFillColor();
 
-    public Object clone() throws CloneNotSupportedException;
+    Object clone() throws CloneNotSupportedException;
+
+    void move(int x1, int y1, int x2, int y2);
+
+    void resize(int x1, int y1, int x2, int y2);
 }

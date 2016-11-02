@@ -3,12 +3,8 @@ package mvc.controller;
 import mvc.model.Model;
 import mvc.model.UpdateCommand;
 import mvc.view.MainGuiView;
-import shapes.Dimensions;
-import shapes.Point;
-import shapes.Rectangle;
-import shapes.Shape;
-import shapes.Ellipse;
-import shapes.Line;
+import mvc.view.RightClickPopUpMenu;
+import shapes.*;
 
 import javax.swing.JPanel;
 
@@ -19,6 +15,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import mvc.view.OpenFile;
@@ -34,12 +32,17 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
     public List<Shape> selectedShapes = new ArrayList<>(); // for select operation
     public boolean shouldSelect = false; // used in draw methods in shapes to fill it in grey color
+    private boolean didChange = false; // this flag used to check if anythings changed in the array of shapes
+    // so the history get updated
 
     private static PainterPanelController singeltonPainterPanel;
 
+
     private PainterPanelController() {
+        // register listeners
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
+        setComponentPopupMenu(new RightClickPopUpMenu());
     }
 
     public static PainterPanelController getPainterPanel() {
@@ -60,6 +63,13 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
         if (currentX != -1 && currentY != -1) {
             switch (MainGuiView.getOperation()) {
+            case DrawTriangle:
+                Triangle triangle = new Triangle(new Point(oldX, oldY),
+                        new Dimensions(currentX - oldX, currentY - oldY));
+                currentShape = triangle;
+
+                triangle.draw(g);
+                break;
             case DrawRect:
                 Rectangle rectangle = new Rectangle(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
                         new Dimensions(calculateWidth(), calculateHeight()));
@@ -83,13 +93,21 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                 Class otherShapeClass = Model.getModel().getSuppotedShapesClassFiles().get(otherShape);
                 try {
                     Shape tempShape = (Shape) otherShapeClass.newInstance();
+                    if (tempShape instanceof RegularPolygon) {
+                        Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
 
-                    Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
-                    Shape shape = (Shape) constructor.newInstance(
-                            new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
-                            new Dimensions(calculateWidth(), calculateHeight()));
-                    currentShape = shape;
-                    currentShape.draw(g);
+                        Shape shape = (Shape) constructor.newInstance(new Point(oldX, oldY),
+                                new Dimensions(currentX - oldX, currentY - oldY));
+                        currentShape = shape;
+                        currentShape.draw(g);
+                    } else {
+                        Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
+
+                        Shape shape = (Shape) constructor.newInstance(
+                                new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
+                                new Dimensions(calculateWidth(), calculateHeight()));
+
+                    }
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (NoSuchMethodException e) {
@@ -103,44 +121,33 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
             case Resize:
                 if (!selectedShapes.isEmpty()) {
                     for (int i = selectedShapes.size() - 1; i >= 0; i = i - 1) {
-                        Shape sh = selectedShapes.get(i);
-                        sh.setDimensions(new Dimensions(currentX, currentY));
+                        selectedShapes.get(i).resize(oldX, oldY, currentX, currentY);
                     }
+                    oldX = currentX;
+                    oldY = currentY;
                 } else if (currentShape != null) {
-                    if (currentShape instanceof Line) {
-                        currentShape.setDimensions((new Dimensions(calculateWidth(), calculateHeight())));
-                        currentShape.draw(g);
-                    } else {
-                        currentShape.setDimensions(new Dimensions(Math.abs(currentX - currentShape.getLocation().x),
-                                Math.abs(currentY - currentShape.getLocation().y)));
-                        currentShape.draw(g);
-                    }
+                    currentShape.resize(oldX, oldY, currentX, currentY);
+                    oldX = currentX;
+                    oldY = currentY;
+                    currentShape.draw(g);
                 }
                 break;
             case Move:
                 if (!selectedShapes.isEmpty()) {
                     for (int i = selectedShapes.size() - 1; i >= 0; i = i - 1) {
-                        Shape sh = selectedShapes.get(i);
-                        // TODO: complete
-                        int offsetX = currentX - oldX;
-                        int offsetY = currentY - oldY;
-                        sh.setLocation(new Point(sh.getLocation().x + offsetX, sh.getLocation().y + offsetY));
+                        selectedShapes.get(i).move(oldX, oldY, currentX, currentY);
                     }
+                    oldX = currentX;
+                    oldY = currentY;
                 } else if (currentShape != null) {
-
-                    // TODO: really s3eed?
-                    if (currentShape instanceof Line) {
-                        currentShape.setLocation(new Point(currentX, currentY));
-                        currentShape.draw(g);
-                    } else {
-                        currentShape.setLocation(new Point(currentX, currentY));
-                        currentShape.draw(g);
-                    }
+                    currentShape.move(oldX, oldY, currentX, currentY);
+                    oldX = currentX;
+                    oldY = currentY;
+                    currentShape.draw(g);
                 }
                 break;
                 case Select:
                     break;
-
             }
         }
 
@@ -161,7 +168,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("mouse pressed");
+        if (e.isPopupTrigger()) return;
         List<Shape> shapes = Model.getModel().getShapes();
         oldX = e.getX();
         oldY = e.getY();
@@ -169,30 +176,34 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
         currentY = oldY;
         switch (MainGuiView.getOperation()) {
             case Resize:
-                for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
-                    Shape sh = shapes.get(i);
-                    try {
-                        if (sh.contain(currentX, currentY)) {
-                            currentShape = sh;
-                            shapes.remove(sh);
-                            break;
+                if (selectedShapes.isEmpty()) {
+                    for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
+                        Shape sh = shapes.get(i);
+                        try {
+                            if (sh.contain(currentX, currentY)) {
+                                currentShape = sh;
+                                shapes.remove(sh);
+                                break;
+                            }
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
                         }
-                    } catch (Exception p) {
                     }
-    
                 }
                 break;
             case Move:
-                for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
-                    Shape sh = shapes.get(i);
-                    try {
-                        if (sh.contain(currentX, currentY)) {
-                            currentShape = sh;
-                            shapes.remove(sh);
-                            break;
+                if (selectedShapes.isEmpty()) {
+                    for (int i = shapes.size() - 1; i >= 0; i = i - 1) {
+                        Shape sh = shapes.get(i);
+                        try {
+                            if (sh.contain(currentX, currentY)) {
+                                currentShape = sh;
+                                shapes.remove(sh);
+                                break;
+                            }
+                        } catch (Exception p) {
+                            p.printStackTrace();
                         }
-                    } catch (Exception p) {
-                        p.printStackTrace();
                     }
                 }
     
@@ -210,14 +221,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                 boolean shapeFound = false;
                 for (Shape shape : shapes) {
                     if (shape.contain(currentX, currentY)) {
-
                         shapeFound = true;
-
-                        // now check if shape already existed in selectedShapes
-                        if (selectedShapes.isEmpty()) {
-                            selectedShapes.add(shape);
-                            break;
-                        }
 
                         boolean selectedShapeFound = false;
                         for (int i = 0; i < selectedShapes.size(); i++) {
@@ -227,10 +231,10 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                                 break;
                             }
                         }
+
                         if (!selectedShapeFound) {
                             selectedShapes.add(shape);
                         }
-
                         break;
                     }
                 }
@@ -244,6 +248,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (e.isPopupTrigger()) return;
         List<Shape> shapes = Model.getModel().getShapes();
 
         switch (MainGuiView.getOperation()) {
@@ -253,10 +258,11 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                         Shape sh = shapes.get(i);
                         if (sh.contain(currentX, currentY)) {
                             shapes.remove(i);
-                            // TODO: changed
+                            didChange = true;
                             break;
                         }
                     } catch (Exception p) {
+                        p.printStackTrace();
                     }
                 }
                 currentX = currentY = -1;
@@ -266,6 +272,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
             default:
                 if (currentShape != null) {
                     shapes.add(currentShape);
+                    didChange = true;
                     currentShape = null;
                     // TODO: changed
                 }
@@ -273,12 +280,15 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
         }
         currentX = currentY = oldX = oldY = -1;
 
-        if (MainGuiView.getOperation() != MainGuiView.Operation.Select) {
+        if (MainGuiView.getOperation() != MainGuiView.Operation.Select && didChange) {
             // update the shapes
             Model.getModel().setShapes(shapes);
 
             // update the history
             new UpdateCommand().execute();
+
+            // reset click
+            didChange = false;
         }
 
         repaint();
@@ -294,6 +304,7 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if (e.isPopupTrigger()) return;
         currentX = e.getX();
         currentY = e.getY();
         repaint();
