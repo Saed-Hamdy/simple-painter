@@ -1,7 +1,10 @@
 package exceptions;
 
 /**
- * Created by ahmedyakout on 10/29/16.
+ * class HistoryEmpty exception
+ * 
+ * Created by YS team
+ * 
  */
 public class HistoryIsEmptyException extends Exception {
     @Override

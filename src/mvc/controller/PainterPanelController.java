@@ -30,30 +30,71 @@ import mvc.view.OpenFile;
  * Created by khlailmohammedyakout on 10/26/16.
  */
 public class PainterPanelController extends JPanel implements MouseListener, MouseMotionListener {
-    private int currentX, currentY;
-    private int oldX, oldY;
-    private Shape currentShape, oldshape; // TODO remove oldashape
-    public static Color selectedColor = Color.black;
 
-    public List<Shape> selectedShapes = new ArrayList<>(); // for select
-                                                           // operation
-    public boolean shouldSelect = false; // used in draw methods in shapes to
-                                         // fill it in grey color
+    /**
+     * current mouse x location
+     */
+    private int currentX;
+    /**
+     * 
+     * current mouse y location
+     */
+    private int currentY;
+    /**
+     * 
+     * old mouse x location
+     */
+    private int oldX;
+    /**
+     * 
+     * old mouse y location
+     */
+    private int oldY;
+    /**
+     * the last selected shape to have opration
+     */
+    private Shape currentShape;
+    /**
+     * the selected color to draw with
+     */
+    public static Color selectedColor = Color.black;
+    /**
+     * a list of the selected shapes to do operation on
+     */
+    public static List<Shape> selectedShapes = new ArrayList<>();
+    /**
+     * a flag use to know if the shape drawing is selected or not to fill it in
+     * gray
+     */
+    public boolean shouldSelect = false;
+
+    /**
+     * the only object of type {@link PainterPanelController} in the program
+     * 
+     */
 
     private static PainterPanelController singeltonPainterPanel;
 
+    /**
+     * initialize the object
+     */
     private PainterPanelController() {
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
     }
-
+/**
+ * 
+ * @return the {@link PainterPanelController}  object
+ */
     public static PainterPanelController getPainterPanel() {
         if (singeltonPainterPanel == null) {
             singeltonPainterPanel = new PainterPanelController();
         }
         return singeltonPainterPanel;
     }
-
+/**
+ * paint the component of the program and handle every state  
+ */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -93,10 +134,11 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
             case Other:
                 // changed
                 String otherShape = MainGuiView.getOtherOperation();
+                System.out.println("other");
                 Class otherShapeClass = Model.getModel().getSuppotedShapesClassFiles().get(otherShape);
                 try {
                     Shape tempShape = (Shape) otherShapeClass.newInstance();
-                    if (tempShape instanceof RegulerPolygon) {
+                    if (tempShape instanceof RegulerPolygon||tempShape instanceof Line) {
                         Constructor constructor = otherShapeClass.getDeclaredConstructor(Point.class, Dimensions.class);
 
                         Shape shape = (Shape) constructor.newInstance(new Point(oldX, oldY),
@@ -109,6 +151,8 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                         Shape shape = (Shape) constructor.newInstance(
                                 new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
                                 new Dimensions(calculateWidth(), calculateHeight()));
+                        currentShape = shape;
+                        currentShape.draw(g);
 
                     }
 
@@ -215,10 +259,12 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
 
             break;
         case Fill:
-            for (Shape shape : shapes) {
-                if (shape.contain(currentX, currentY)) {
-                    shape.setFillColor(selectedColor);
-                    break;
+            if (selectedShapes.isEmpty()) {
+                for (Shape shape : shapes) {
+                    if (shape.contain(currentX, currentY)) {
+                        shape.setFillColor(selectedColor);
+                        break;
+                    }
                 }
             }
             break;
@@ -226,29 +272,34 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
         case Select:
             boolean shapeFound = false;
             for (Shape shape : shapes) {
+                System.out.println("slect found");
                 if (shape.contain(currentX, currentY)) {
-
+                    selectedShapes.add(shape);
+                    shapes.remove(shape);
                     shapeFound = true;
-
-                    boolean selectedShapeFound = false;
-                    for (int i = 0; i < selectedShapes.size(); i++) {
-                        if (selectedShapes.get(i) == shape) {
-                            selectedShapes.remove(i);
-                            selectedShapeFound = true;
-                            break;
-                        }
-                    }
-                    if (!selectedShapeFound) {
-                        selectedShapes.add(shape);
-                    }
-
+                    System.out.println("slect found2  " + shapes.size());
                     break;
                 }
             }
-
+            Boolean selectedFound = false;
             if (!shapeFound) {
-                selectedShapes.clear();
+
+                for (Shape shape : selectedShapes) {
+                    if (shape.contain(currentX, currentY)) {
+                        shapes.add(shape);
+                        selectedShapes.remove(shape);
+                        selectedFound = true;
+                        System.out.println("slect found3  " + selectedShapes.size());
+                        break;
+                    }
+
+                }
+                if (!selectedFound) {
+                    shapes.addAll(selectedShapes);
+                    selectedShapes.clear();
+                }
             }
+
             break;
         }
     }
@@ -313,7 +364,9 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
     @Override
     public void mouseMoved(MouseEvent e) {
     }
-
+/**
+ * 
+ */
     public void doneSelecting() {
         shouldSelect = false;
         selectedShapes.clear();

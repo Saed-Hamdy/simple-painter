@@ -6,8 +6,7 @@ import mvc.controller.PainterPanelController;
 
 /**
  * 
- * @author YS team
- * class 2Dline 
+ * @author YS team class 2Dline
  */
 
 public class Line implements Shape, Cloneable {
@@ -29,7 +28,9 @@ public class Line implements Shape, Cloneable {
      */
 
     private Color fillColor = null;
-
+    public Line (){
+        
+    }
 
     public Line(int x1, int y1, int x2, int y2) {
         color = PainterPanelController.selectedColor;
@@ -38,21 +39,29 @@ public class Line implements Shape, Cloneable {
         dimensions = new Dimensions(x2 - x1, y2 - y1);
 
     }
-    public Line(Point location,Dimensions dimensions){
+
+    public Line(Point location, Dimensions dimensions) {
         color = PainterPanelController.selectedColor;
-        this.location=location;
-        this.dimensions=dimensions;
+        this.location = location;
+        this.dimensions = dimensions;
     }
 
+    @Override
     public void draw(Graphics g) {
         g.setColor(getColor());
-        g.drawLine(location.x, location.y, location.x + dimensions.width,location.y+ dimensions.height);
+        g.drawLine(location.x, location.y, location.x + dimensions.width, location.y + dimensions.height);
+        if (PainterPanelController.getPainterPanel().shouldSelect) {
+            g.setColor(Color.LIGHT_GRAY);
+            g.drawLine(location.x, location.y, location.x + dimensions.width, location.y + dimensions.height);
+
+        }
+
     }
 
     @Override
     public void setLocation(Point location) {
         this.location = location;
-      
+
     }
 
     @Override
@@ -68,19 +77,19 @@ public class Line implements Shape, Cloneable {
     @Override
     public void setDimensions(Dimensions dimensions) {
         this.dimensions = dimensions;
-      
+
     }
 
     @Override
     public boolean contain(int x, int y) {
         // TODO Auto-generated method stub
-        if (x <= Math.max(location.x,location.x+dimensions.width) &&
-                x >= Math.min(location.x,location.x+dimensions.width))
+        if (x <= Math.max(location.x, location.x + dimensions.width)
+                && x >= Math.min(location.x, location.x + dimensions.width))
             try {
-                System.out.println("gg");
+                // System.out.println("gg");
 
-                return (((x - location.x) / (y - location.y)) == 
-                        (location.x+dimensions.width - location.x) / (location.y+dimensions.height - location.y));
+                return (((x - location.x) / (y - location.y)) == (location.x + dimensions.width - location.x)
+                        / (location.y + dimensions.height - location.y));
             } catch (Exception exp) {
                 System.out.println("kkll");
                 return (Math.abs(Math.ceil((x - location.x) * (dimensions.height / 10))
@@ -90,7 +99,7 @@ public class Line implements Shape, Cloneable {
 
         return false;
     }
-
+    @Override
     public void setColor(Color color) {
         this.color = color;
     }
@@ -109,6 +118,7 @@ public class Line implements Shape, Cloneable {
     public Color getFillColor() {
         return fillColor;
     }
+
     @Override
     public void move(int x1, int y1, int x2, int y2) {
         location.x += x2 - x1;
@@ -117,7 +127,7 @@ public class Line implements Shape, Cloneable {
 
     @Override
     public void resize(int x1, int y1, int x2, int y2) {
-        System.out.println(x1+""+x2+""+y1+""+y2);
+        System.out.println(x1 + "" + x2 + "" + y1 + "" + y2);
         dimensions.width = (dimensions.width + x2 - x1);
         dimensions.height = (dimensions.height + y2 - y1);
     }
@@ -129,7 +139,5 @@ public class Line implements Shape, Cloneable {
         clonedShape.setFillColor(clonedShape.getColor());
         return clonedShape;
     }
-
-   
 
 }

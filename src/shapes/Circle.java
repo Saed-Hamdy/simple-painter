@@ -1,4 +1,7 @@
 package shapes;
+
+import java.awt.Dimension;
+
 /**
  * class circle
  * 
@@ -8,16 +11,16 @@ package shapes;
 
 public class Circle extends Ellipse {
     /**
-     * location of the shape
-     */
-    private Point location;
-    /**
      * radius of the circle
      */
     private int radius;
+    
 
-    public Circle (Point location, int radius) {
-        super(location, new Dimensions(radius, radius));
+    public Circle(Point location, Dimension dimention) {
+
+        super(location, new Dimensions(Math.max(dimention.width, dimention.height),
+                Math.max(dimention.width, dimention.height)));
+        radius=Math.max(dimention.width, dimention.height);
     }
 
     public int getRadius() {

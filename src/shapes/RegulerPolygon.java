@@ -30,6 +30,10 @@ public class RegulerPolygon extends Polygon {
      * number of shape sides
      */
     private int NunuOfSides;
+    
+    public RegulerPolygon(){
+        
+    }
 
     /**
      * constructor
@@ -79,6 +83,7 @@ public class RegulerPolygon extends Polygon {
         NunuOfSides = points.size();
     }
 
+    @Override
     public void draw(Graphics g) {
         int numberOfPoints = points.size();
         int[] xPoints = new int[numberOfPoints];
@@ -88,29 +93,18 @@ public class RegulerPolygon extends Polygon {
             yPoints[i] = points.get(i).y;
         }
 
-        // g.drawPolygon(xPoints, yPoints, points.size());
-        if (fillColor == null) {
-            g.setColor(color);
-            g.drawPolygon(xPoints, yPoints, numberOfPoints);
-            if (PainterPanelController.getPainterPanel().shouldSelect) {
-                g.setColor(new Color(0, 0, 0, 20));
-                g.fillPolygon(xPoints, yPoints, numberOfPoints);
-
-            }
-        } else {
+        if (fillColor != null && !PainterPanelController.getPainterPanel().shouldSelect) {
             g.setColor(fillColor);
             g.fillPolygon(xPoints, yPoints, numberOfPoints);
-            if (PainterPanelController.getPainterPanel().shouldSelect) {
-                g.setColor(new Color(0, 0, 0, 20));
-                g.fillPolygon(xPoints, yPoints, numberOfPoints);
-
-            }
+        }
+        g.setColor(color);
+        g.drawPolygon(xPoints, yPoints, numberOfPoints);
+        if (PainterPanelController.getPainterPanel().shouldSelect) {
+            g.setColor(new Color(0, 0, 0, 20));
+            g.fillPolygon(xPoints, yPoints, numberOfPoints);
 
         }
     }
-
-    
-
 
     public boolean contain(int x, int y) {
         int numberOfPoints = points.size();
@@ -143,6 +137,7 @@ public class RegulerPolygon extends Polygon {
     public Color getFillColor() {
         return fillColor;
     }
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         RegulerPolygon polyg = new RegulerPolygon(points);

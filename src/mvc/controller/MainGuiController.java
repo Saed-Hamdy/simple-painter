@@ -9,15 +9,15 @@ import mvc.view.MainGuiView;
  */
 public class MainGuiController {
     /**
-     * singelton object of the MainGuiView
+     * single object of the MainGuiView
      */
     private MainGuiView mainGuiView;
-
+    /**
+     * constructor to set the initial condition
+     */
     public MainGuiController() {
         // load model
         Model.getModel();
-
-
         // load all views
         mainGuiView = MainGuiView.getMainGuiView();
 

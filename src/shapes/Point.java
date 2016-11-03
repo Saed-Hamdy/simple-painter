@@ -1,7 +1,8 @@
 package shapes;
 
 /**
- * Created by khlailmohammedyakout on 10/27/16.
+ * this is a point class of type int 
+ * Created by YS team
  */
 public class Point {
     public int x;

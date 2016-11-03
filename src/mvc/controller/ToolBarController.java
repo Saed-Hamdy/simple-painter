@@ -1,5 +1,6 @@
 package mvc.controller;
 
+import mvc.model.Model;
 import mvc.view.MainGuiView;
 import mvc.view.ToolBarFactory;
 import javax.swing.*;
@@ -18,6 +19,14 @@ public class ToolBarController {
         addListners();
     }
 
+    private static void clearSelectedShapes() {
+        if (!PainterPanelController.selectedShapes.isEmpty())
+            Model.getModel().getShapes().addAll(PainterPanelController.selectedShapes);
+        PainterPanelController.selectedShapes.clear();
+        MainGuiView.getMainGuiView().repaint();
+
+    }
+
     void addListners() {
         Component[] components = toolBarPanel.getComponents();
         for (Component component : components) {
@@ -28,6 +37,7 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawTriangle);
+                        clearSelectedShapes();
                     }
                 });
                 break;
@@ -36,6 +46,7 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawLine);
+                        clearSelectedShapes();
                     }
                 });
                 break;
@@ -44,6 +55,7 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawOval);
+                        clearSelectedShapes();
                     }
                 });
                 break;
@@ -52,18 +64,11 @@ public class ToolBarController {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         MainGuiView.setOperation(MainGuiView.Operation.DrawRect);
+                        clearSelectedShapes();
                     }
                 });
                 break;
-            case "Delete":
-                buttonComponent.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        MainGuiView.setOperation(MainGuiView.Operation.Delete);
-                    }
-                });
-                break;
-
+           
             }
         }
     }
@@ -74,6 +79,7 @@ public class ToolBarController {
             public void actionPerformed(ActionEvent e) {
                 MainGuiView.setOperation(MainGuiView.Operation.Other);
                 MainGuiView.setOtherOperation(button.getText());
+                clearSelectedShapes();
             }
         });
     }

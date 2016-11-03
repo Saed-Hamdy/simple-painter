@@ -27,7 +27,7 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 package mvc.controller;
 
@@ -43,20 +43,34 @@ import javax.swing.JButton;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 
-
+/**
+ * color chooser class
+ * 
+ * @author YS team
+ *
+ */
 
 public class ColorChooser extends JFrame implements ChangeListener {
+    /**
+     * color chosser to chose the new color
+     */
     public static JColorChooser tcc;
 
+    /**
+     * constructor to initialize the class
+     */
     public ColorChooser() {
-    	setTitle("Choose Color");
-    	setVisible(true);
-    	setSize(600, 400);
-    	setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setTitle("Choose Color");
+        setVisible(true);
+        setSize(600, 400);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         initComponents();
     }
 
+    /**
+     * initialize components
+     */
     private void initComponents() {
 
         JPanel bannerPanel = new JPanel(new BorderLayout());
@@ -76,9 +90,11 @@ public class ColorChooser extends JFrame implements ChangeListener {
         bannerPanel.add(btn, BorderLayout.SOUTH);
     }
 
+    /**
+     * update painter color
+     */
     public void stateChanged(ChangeEvent e) {
-       // GUI.selectColor = tcc.getColor();
-        PainterPanelController.selectedColor=tcc.getColor();
-        
+        PainterPanelController.selectedColor = tcc.getColor();
+
     }
 }

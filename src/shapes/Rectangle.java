@@ -5,7 +5,7 @@ import shapes.Point;
 
 import java.awt.*;
 
-public class Rectangle extends RegulerPolygon {
+public class Rectangle extends Polygon {
     /**
      * location of the shape
      */
@@ -27,27 +27,29 @@ public class Rectangle extends RegulerPolygon {
     /**
      * number of shape sides
      */
-    private final static int sides = 4;
+    
+    public Rectangle(){
+        
+    }
 
     public Rectangle(Point location, Dimensions dimensions) {
-        super(location, dimensions, sides);
-        color=PainterPanelController.selectedColor;
+        super();
+        color = PainterPanelController.selectedColor;
         this.location = location;
         this.dimensions = dimensions;
     }
 
     @Override
     public void draw(Graphics g) {
-        if (fillColor == null) {
-            g.setColor(color);
-            g.drawRect(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
-                    dimensions.height < 0 ? 0 : dimensions.height);
-            if (PainterPanelController.getPainterPanel().shouldSelect) {
-                g.setColor(new Color(0, 0, 0, 20));
-                g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
-            }
-        } else {
+        if (fillColor != null&&!PainterPanelController.getPainterPanel().shouldSelect) {
             g.setColor(fillColor);
+            g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
+        }
+        g.setColor(color);
+        g.drawRect(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
+                dimensions.height < 0 ? 0 : dimensions.height);
+        if (PainterPanelController.getPainterPanel().shouldSelect) {
+            g.setColor(new Color(0, 0, 0, 20));
             g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
         }
 

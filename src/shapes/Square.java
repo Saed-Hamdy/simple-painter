@@ -14,6 +14,9 @@ public class Square extends Rectangle {
      * @param location
      * @param dimensions
      */
+    public Square (){
+        
+    }
     public Square(Point location, Dimensions dimensions) {
 
         super(location, new Dimensions(Math.max(dimensions.height, dimensions.width),

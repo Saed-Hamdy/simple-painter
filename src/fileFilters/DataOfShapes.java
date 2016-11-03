@@ -10,6 +10,7 @@ import shapes.Shape;
 /**
  * 
  * @author YS team;
+ * this class is use to store all data before send or before save 
  *
  */
 public class DataOfShapes {

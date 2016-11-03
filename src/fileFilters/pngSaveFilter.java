@@ -4,7 +4,11 @@ package fileFilters;
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
-
+/**
+ * filter for png files
+ * @author said
+ *
+ */
 public class pngSaveFilter extends FileFilter
 { 
 	public boolean accept(File f)

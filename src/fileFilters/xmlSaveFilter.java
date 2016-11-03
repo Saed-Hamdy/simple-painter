@@ -2,7 +2,11 @@ package fileFilters;
 import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
-
+/**
+ * filter for xml files
+ * @author said
+ *
+ */
 public class xmlSaveFilter extends FileFilter{
 
     @Override

@@ -6,6 +6,7 @@ import mvc.controller.PainterPanelController;
 
 /**
  * Class of 2DEllipse
+ * 
  * @author Ys team
  *
  */
@@ -31,11 +32,15 @@ public class Ellipse implements Shape {
     private Color fillColor = null;
 
     /**
-     * constructor 
+     * constructor
+     * 
      * @param points
      *            of the shape
      */
 
+    public Ellipse (){
+        
+    }
     public Ellipse(Point location, Dimensions dimensions) {
         color = PainterPanelController.selectedColor;
         this.location = location;
@@ -44,20 +49,18 @@ public class Ellipse implements Shape {
 
     @Override
     public void draw(Graphics g) {
-        if (getFillColor() == null) {
-            g.setColor(getColor());
-            g.drawOval(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
-                    dimensions.height < 0 ? 0 : dimensions.height);
 
-            if (PainterPanelController.getPainterPanel().shouldSelect) {
-                g.setColor(new Color(0, 0, 0, 20));
-                g.fillOval(location.x, location.y, dimensions.width, dimensions.height);
-            }
-        } else {
+        if (getFillColor() != null&&! PainterPanelController.getPainterPanel().shouldSelect) {
             g.setColor(getFillColor());
             g.fillOval(location.x, location.y, dimensions.width, dimensions.height);
         }
-
+        g.setColor(getColor());
+        g.drawOval(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
+                dimensions.height < 0 ? 0 : dimensions.height);
+        if (PainterPanelController.getPainterPanel().shouldSelect) {
+            g.setColor(new Color(0, 0, 0, 20));
+            g.fillOval(location.x, location.y, dimensions.width, dimensions.height);
+        }
     }
 
     @Override

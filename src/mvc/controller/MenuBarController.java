@@ -21,12 +21,27 @@ import mvc.view.OpenFile;
 import mvc.view.SaveFile;
 
 /**
+ * This class is use to control every thing in the menu bar
  * Created by khlailmohammedyakout on 10/26/16.
+ *  
  */
 public class MenuBarController {
+    /**
+     * the menu bar
+     */
     private JMenuBar menuBar;
+    /**
+     * the file chooser object
+     */
     private JFileChooser fileChooser;
+    /**
+     * the Main application GUI object 
+     * will be use to apply changes
+     */
     private MainGuiView mainGuiView;
+    /**
+     * the tool bar object
+     */
     private ToolBarFactory toolBarPanel;
 
     public MenuBarController() {
@@ -35,6 +50,10 @@ public class MenuBarController {
         toolBarPanel = ToolBarFactory.getToolBarPanel();
         addListners();
     }
+    /**
+     * this method is use to add listeners to all object in the menu bar
+     * 
+     */
 
     private void addListners() {
         Component[] components = menuBar.getComponents();
@@ -102,8 +121,6 @@ public class MenuBarController {
                                     mainGuiView.showError(e1.toString());
                                 }
 
-                                // Model.loadNewShape(directory + "." +
-                                // fileName);
                             }
                         }
                     });
@@ -148,6 +165,11 @@ public class MenuBarController {
         }
     }
 
+    /**
+     * this method is use to add a new class to the tool bar   
+     * @param shapeName
+     * @param aClass
+     */
     private void addNewShape(String shapeName, Class aClass) {
         ToolBarController.addNewListner(toolBarPanel.addNewShapeButton(shapeName));
         Model.getModel().setSuppotedShapesClassFiles(shapeName, aClass);
