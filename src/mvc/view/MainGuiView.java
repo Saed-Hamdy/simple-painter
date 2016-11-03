@@ -17,34 +17,49 @@ import java.util.List;
 
 /**
  * Created on 10/26/16.
+ * @author YS-Team
+ * The main gui frame
  */
 public class MainGuiView extends JFrame {
+    /**
+     *  MainGuiView singelton object
+     */
     private static MainGuiView mainGuiView;
+    /**
+     * the current selected operation (draw a line by default).
+     */
     private static Operation operation = Operation.DrawLine;
+    /**
+     * other operation name
+     */
     private static String otherOperation;
-
     private JPanel painterPanel;
     private JPanel toolBarPanel;
+    private JPanel operationBarPanel;
     private JMenuBar menuBar;
 
+    /**
+     * the operations
+     */
     public enum Operation {
         DrawOval,
+        DrawR_Polygon,
         DrawLine,
         DrawRect,
         Resize,
         Delete,
-        Clear,
         Move,
         Fill,
         Select,
-        Other, DrawTriangle;
+        Other,
     }
 
     private MainGuiView() {
         // setVisible(true);
         setTitle("Painter");
         setSize(1000, 700);
-        setResizable(false);
+        setResizable(true);
+        setMinimumSize(this.size());
         setLocation(100, 0);
         initComponents();
     }
@@ -61,16 +76,21 @@ public class MainGuiView extends JFrame {
 
         menuBar = MenuBarFactory.getMenuBar();
         toolBarPanel = ToolBarFactory.getToolBarPanel();
+        operationBarPanel=OprationBarFactory.getOprationBarPanel();
         painterPanel = PainterPanelController.getPainterPanel();
 
         setJMenuBar(menuBar);
         add(toolBarPanel);
+        add(operationBarPanel);
         add(painterPanel);
 
         FlowLayout flowLayout = (FlowLayout) toolBarPanel.getLayout();
-        flowLayout.setAlignment(FlowLayout.LEFT);
+        flowLayout.setAlignment(FlowLayout.LEFT);        
         toolBarPanel.setBackground(Color.darkGray);
         add(toolBarPanel, BorderLayout.NORTH);
+        operationBarPanel.setLayout(new BoxLayout(operationBarPanel,BoxLayout.Y_AXIS));
+        operationBarPanel.setBackground(Color.darkGray);
+        add(operationBarPanel, BorderLayout.WEST);
     }
 
     public void showError(String message) {

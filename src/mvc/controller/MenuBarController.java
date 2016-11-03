@@ -12,23 +12,34 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 
 /**
- * Created by ahmedyakout on 10/26/16.
+ * This class is use to control every thing in the menu bar
+ * Created by khlailmohammedyakout on 10/26/16.
+ *  
  */
 public class MenuBarController {
+    /**
+     * the menu bar
+     */
     private JMenuBar menuBar;
+    /**
+     * the file chooser object
+     */
     private JFileChooser fileChooser;
+    /**
+     * the Main application GUI object 
+     * will be use to apply changes
+     */
     private MainGuiView mainGuiView;
-    private ToolBarFactory toolBarPanel;
+    /**
+     * the tool bar object
+     */
+
 
     public MenuBarController() {
         menuBar = MenuBarFactory.getMenuBar();
         mainGuiView = MainGuiView.getMainGuiView();
-        toolBarPanel = ToolBarFactory.getToolBarPanel();
         addListners();
     }
 
@@ -40,6 +51,7 @@ public class MenuBarController {
                 if(menuComponent instanceof JSeparator) continue;
                 JMenuItem menuItem = (JMenuItem) menuComponent;
                 switch (menuItem.getText()) {
+                
                     case "Open":
                         menuItem.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
@@ -73,36 +85,7 @@ public class MenuBarController {
                                     }
                                 };
                                 fileChooser.addChoosableFileFilter(classFilesFilter);
-                                int returnValue = fileChooser.showOpenDialog(MainGuiView.getMainGuiView());
-                                if (returnValue == JFileChooser.APPROVE_OPTION) {
-                                    String fileName = fileChooser.getSelectedFile().getName();
-                                    fileName = fileName.replace(".class", "");
-                                    System.out.println(fileName);
-
-                                    String directory = fileChooser.getCurrentDirectory().toString();
-                                    // directory = directory.replaceAll("/", ".").replaceFirst(".", "");
-                                    directory = directory.replace("/shapes", "");
-                                    System.out.println(directory);
-
-                                    File file = new File(directory);
-                                    URL url;
-                                    try {
-                                        url = file.toURI().toURL();
-                                        URL[] urls = new URL[]{url};
-                                        ClassLoader classLoader = new URLClassLoader(urls);
-                                        Class  aClass = classLoader.loadClass("shapes." + fileName);
-                                        addNewShape(fileName, aClass);
-                                    } catch (MalformedURLException e1) {
-                                        e1.printStackTrace();
-                                        mainGuiView.showError(e1.toString());
-                                    } catch (ClassNotFoundException e1) {
-                                        e1.printStackTrace();
-                                        mainGuiView.showError(e1.toString());
-                                    }
-                                    // Model.loadNewShape(directory + "." + fileName);
-                                } else {
-                                    System.out.println("canceled");
-                                }
+                                Model.getModel().loadNewShape(fileChooser);
                             }
                         });
                         break;
@@ -179,14 +162,17 @@ public class MenuBarController {
                             }
                         });
                         break;
+                    case "New":
+                        menuItem.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                Model.getModel().getShapes().clear();
+                                PainterPanelController.getPainterPanel().repaint();
+                            }
+                        });
+                        break;
                 }
             }
         }
-    }
-
-    private void addNewShape(String shapeName, Class aClass) {
-        ToolBarController.addNewListner(toolBarPanel.addNewShapeButton(shapeName));
-        Model.getModel().setSuppotedShapesClassFiles(shapeName, aClass);
     }
 
 }

@@ -1,8 +1,19 @@
 package shapes;
 
-public class Square extends Rectangle {
+/**
+ * class 2Dsqure
+ * 
+ * @author said
+ *
+ */
 
-    public Square(Point location,Dimensions dimensions) {
-        super(location, new Dimensions(Math.max(dimensions.height, dimensions.width), Math.max(dimensions.height, dimensions.width)));
+public class Square extends RegulerPolygon {
+    private static final int numberOfSides = 4;
+
+    public Square (){
+    }
+
+    public Square(Point location, Dimensions dimensions) {
+        super(location, dimensions, numberOfSides);
     }
 }

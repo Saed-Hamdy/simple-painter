@@ -15,18 +15,33 @@ import java.util.Stack;
  * Created by ahmedyakout on 10/29/16.
  */
 public class History {
-    private final int MAX_HISTORY_LIMIT = 20;
+    /**
+     * initial history limit
+     */
+    private final int INITIAL_HISTORY_LIMIT = 20;
+    /**
+     * current history limit
+     */
     private int limit;
+    /**
+     * the main history which has last operations
+     */
     public Stack<List<Shape>> primaryHistoryStack;
+    /**
+     * secondary help to do redo operation
+     */
     public Stack<List<Shape>> secondaryHistoryStack;
 
     public History() {
         primaryHistoryStack = new Stack<>();
         primaryHistoryStack.push(new ArrayList<Shape>());
         secondaryHistoryStack = new Stack<>();
-        limit = MAX_HISTORY_LIMIT;
+        limit = INITIAL_HISTORY_LIMIT;
     }
 
+    /**
+     * redo the last operation the user canceled
+     */
     public void redo() throws CannotRedoException, HistoryIsEmptyException {
         if (secondaryHistoryStack.isEmpty() && primaryHistoryStack.isEmpty()) {
             throw new HistoryIsEmptyException();
@@ -41,6 +56,9 @@ public class History {
 
     }
 
+    /**
+     * undo the last operation the user done.
+     */
     public void undo() throws CannotUndoException, HistoryIsEmptyException{
         if (secondaryHistoryStack.isEmpty() && primaryHistoryStack.isEmpty()) {
             throw new HistoryIsEmptyException();
@@ -73,7 +91,6 @@ public class History {
     }
 
     /**
-     *
      * @return history limit.
      */
     public int getLimit() {

@@ -1,7 +1,7 @@
 package mvc.view;
 
 import java.awt.image.BufferedImage;
-
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -18,12 +18,14 @@ import fileFilters.JasonSaveFileFilter;
 import fileFilters.xmlSaveFilter;
 
 
+/**
+ * open file chooser to load file from pc (json, xml, image).
+ */
 @SuppressWarnings("serial")
 public class OpenFile extends JFrame {
     public static BufferedImage image;
-    // private List <Shape>shapes = new ArrayList<>();
-    // private BufferedReader br;
-
+    public static File imageDirectory=null;    
+    
     public OpenFile() throws ClassNotFoundException {
         JFileChooser openFile = new JFileChooser();
         openFile.addChoosableFileFilter(new pngSaveFilter());
@@ -33,6 +35,7 @@ public class OpenFile extends JFrame {
         if (result == JFileChooser.APPROVE_OPTION) {
             if (openFile.getSelectedFile().getName().endsWith(".png")) {
                 try {
+                    imageDirectory=openFile.getSelectedFile();                    
                     image = ImageIO.read(openFile.getSelectedFile());
                     MainGuiView.getMainGuiView().repaint();
                 } catch (IOException ex) {
@@ -45,8 +48,11 @@ public class OpenFile extends JFrame {
                     json.alias("data", DataOfShapes.class);
                     data = (DataOfShapes) json.fromXML(openFile.getSelectedFile());
                     Model.getModel().setShapes(data.getListOfStates());
-                    image = data.getImage();
-                    MainGuiView.getMainGuiView().repaint();
+                    imageDirectory=data.getImage();
+                    if(imageDirectory!=null)
+                        image = ImageIO.read(imageDirectory);
+                    
+                     MainGuiView.getMainGuiView().repaint();
 
                 } catch (Exception e1) {
                     e1.printStackTrace();
@@ -54,12 +60,14 @@ public class OpenFile extends JFrame {
 
             } else if (openFile.getSelectedFile().getName().endsWith(".xml")) {
                 try {
-                    DataOfShapes data;
+                    DataOfShapes data ;
                     XStream xml = new XStream(new StaxDriver());
                     xml.alias("data", DataOfShapes.class);
                     data = (DataOfShapes) xml.fromXML(openFile.getSelectedFile());
                     Model.getModel().setShapes(data.getListOfStates());
-                    image = data.getImage();
+                    imageDirectory=data.getImage();
+                    if(imageDirectory!=null)
+                        image = ImageIO.read(imageDirectory);
                     MainGuiView.getMainGuiView().repaint();
 
                 } catch (Exception e1) {

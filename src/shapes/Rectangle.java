@@ -1,43 +1,56 @@
 package shapes;
 
 import mvc.controller.PainterPanelController;
+import shapes.Point;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Rectangle implements Shape {
-
-    private Dimensions dimensions;
+public class Rectangle extends Polygon {
+    /**
+     * location of the shape
+     */
     private Point location;
-    // private List<Point> points;
+    /**
+     * Dimensions of the shape
+     */
+    private Dimensions dimensions;
+    /**
+     * shape color default is black
+     */
     private Color color = Color.black;
-    private Color fillColor = null;
 
-    public Rectangle() {
-        // super(new ArrayList<>());
+    /**
+     * shape area color default null
+     */
+
+    private Color fillColor = null;
+    /**
+     * number of shape sides
+     */
+    
+    public Rectangle(){
+        
     }
 
     public Rectangle(Point location, Dimensions dimensions) {
-        // super(new ArrayList<>()); // TODO
-
+        super();
+        color = PainterPanelController.selectedColor;
         this.location = location;
         this.dimensions = dimensions;
     }
 
     @Override
     public void draw(Graphics g) {
-        if (getFillColor() == null) {
-            g.setColor(getColor());
-            g.drawRect(location.x, location.y, dimensions.width, dimensions.height);
-
-            if (PainterPanelController.getPainterPanel().shouldSelect) {
-                g.setColor(new Color(0, 0, 0, 20));
-                g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
-            }
-        } else {
-            g.setColor(getFillColor());
-            g.fillRect(location.x, location.y, dimensions.width, dimensions.height);         
+        if (fillColor != null&&!PainterPanelController.getPainterPanel().shouldSelect) {
+            g.setColor(fillColor);
+            g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
+        }
+        g.setColor(color);
+        g.drawRect(location.x, location.y, dimensions.width < 0 ? 0 : dimensions.width,
+                dimensions.height < 0 ? 0 : dimensions.height);
+        if (PainterPanelController.getPainterPanel().shouldSelect) {
+            g.setColor(new Color(0, 0, 0, 20));
+            g.fillRect(location.x, location.y, dimensions.width, dimensions.height);
         }
 
     }
@@ -79,24 +92,6 @@ public class Rectangle implements Shape {
         this.dimensions = dimensions;
     }
 
-//    @Override
-//    public List<Point> getPoints() {
-//        return points;
-//    }
-//
-//    @Override
-//    public void setPoints(List<Point> points) {
-//        this.points = points;
-//    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Rectangle rectangle = new Rectangle(this.location, this.dimensions);
-        rectangle.setColor(getColor());
-        rectangle.setFillColor(getFillColor());
-        return rectangle;
-    }
-
     public void setColor(Color color) {
         this.color = color;
     }
@@ -123,7 +118,16 @@ public class Rectangle implements Shape {
 
     @Override
     public void resize(int x1, int y1, int x2, int y2) {
-        dimensions.width =(dimensions.width + x2 - x1);
+        dimensions.width = (dimensions.width + x2 - x1);
         dimensions.height = (dimensions.height + y2 - y1);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Rectangle rectangle = new Rectangle(this.location, this.dimensions);
+        rectangle.setColor(getColor());
+        rectangle.setFillColor(getFillColor());
+        return rectangle;
+    }
+
 }

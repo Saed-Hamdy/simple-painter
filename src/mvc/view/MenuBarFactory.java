@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * Created by khlailmohammedyakout on 10/26/16.
+ * the menu bar factory class
  */
 public class MenuBarFactory {
     private static JMenuBar menuBar;
@@ -22,6 +23,7 @@ public class MenuBarFactory {
     private JMenu helpMenu;
     private JMenuItem exitMenuItem;
     private JMenuItem saveMenuItem;
+    private JMenuItem newMenuItem;
     private JMenuItem redoMenuItem;
     private JMenuItem undoMenuItem;
     private JMenuItem addPluginMenuItem;
@@ -30,8 +32,6 @@ public class MenuBarFactory {
     private JMenuItem startServerMenuItem;
     private JMenuItem sharedPainterMenuItem;
     private JMenuItem about;
-
-
 
     private MenuBarFactory() {
         menuBar = new JMenuBar();
@@ -53,8 +53,8 @@ public class MenuBarFactory {
         toolsMenu = new JMenu("Tools");
         helpMenu = new JMenu("Help");
 
-
         menuBar = new JMenuBar();
+        newMenuItem = new JMenuItem("New");
         saveMenuItem = new JMenuItem("Save");
         openMenuItem = new JMenuItem("Open");
         exitMenuItem = new JMenuItem("Exit");
@@ -73,6 +73,7 @@ public class MenuBarFactory {
     }
 
     private void buildMenuBar() {
+        fileMenu.add(newMenuItem);
         fileMenu.add(openMenuItem);
         fileMenu.add(saveMenuItem);
         fileMenu.addSeparator();
@@ -97,6 +98,7 @@ public class MenuBarFactory {
     private void setIcons() {
         try {
 
+            Image newIcon = ImageIO.read(getClass().getResource("/resources/menubar/fileMenu/newIcon.png"));
             Image openIcon = ImageIO.read(getClass().getResource("/resources/menubar/fileMenu/openIcon.png"));
             Image saveIcon = ImageIO.read(getClass().getResource("/resources/menubar/fileMenu/saveIcon.png"));
             Image exitIcon = ImageIO.read(getClass().getResource("/resources/menubar/fileMenu/exitIcon.png"));
@@ -104,14 +106,19 @@ public class MenuBarFactory {
             Image undoIcon = ImageIO.read(getClass().getResource("/resources/menubar/editMenu/undoIcon.png"));
             Image redoIcon = ImageIO.read(getClass().getResource("/resources/menubar/editMenu/redoIcon.png"));
 
-            Image addPluginIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/addPluginIcon.png"));
-            Image setHistoryLimitIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/setHistoryLimitIcon.png"));
-            Image startServerIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/startServerIcon.png"));
-            Image sharePainterIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/sharePainterIcon.png"));
+            Image addPluginIcon = ImageIO
+                    .read(getClass().getResource("/resources/menubar/toolsMenu/addPluginIcon.png"));
+            Image setHistoryLimitIcon = ImageIO
+                    .read(getClass().getResource("/resources/menubar/toolsMenu/setHistoryLimitIcon.png"));
+            Image startServerIcon = ImageIO
+                    .read(getClass().getResource("/resources/menubar/toolsMenu/startServerIcon.png"));
+            Image sharePainterIcon = ImageIO
+                    .read(getClass().getResource("/resources/menubar/toolsMenu/sharePainterIcon.png"));
 
             Image aboutIcon = ImageIO.read(getClass().getResource("/resources/menubar/helpMenu/aboutIcon.png"));
 
             saveMenuItem.setIcon(new ImageIcon(saveIcon));
+            newMenuItem.setIcon(new ImageIcon(newIcon));
             openMenuItem.setIcon(new ImageIcon(openIcon));
             exitMenuItem.setIcon(new ImageIcon(exitIcon));
 
@@ -130,11 +137,13 @@ public class MenuBarFactory {
     }
 
     private void assignShortcuts() {
+        newMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
         saveMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
         exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
 
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK));
-        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
+        redoMenuItem
+                .setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_MASK | InputEvent.SHIFT_MASK));
 
         openMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
     }

@@ -9,8 +9,6 @@ import mvc.view.MainGuiView;
  * Created by ahmedyakout on 10/29/16.
  */
 public class RedoCommand implements Command {
-
-
     public RedoCommand() {
     }
 

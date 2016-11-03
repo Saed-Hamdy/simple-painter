@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Created by khlailmohammedyakout on 11/3/16.
+ * window opened when user need to start a server
  */
 public class StartServerWindow extends JFrame {
     private JPanel contentPane;

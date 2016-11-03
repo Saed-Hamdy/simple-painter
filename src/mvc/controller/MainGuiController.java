@@ -8,8 +8,9 @@ import mvc.view.MainGuiView;
 import server.Client;
 
 /**
- * the MainGuiController is controller part of the MainGuiView view it's get called by @see .LaunchGui
- * it's responsible to call MainGuiView and other controllers
+ * the MainGuiController is controller part of the MainGuiView view it's get
+ * called by @see .LaunchGui it's responsible to call MainGuiView and other
+ * controllers
  */
 public class MainGuiController {
     /**
@@ -32,19 +33,19 @@ public class MainGuiController {
                 // load all views
                 mainGuiView = MainGuiView.getMainGuiView();
 
-                // show the up after it has finished setting up the gui components
+                // show the up after it has finished setting up the gui
+                // components
                 mainGuiView.setVisible(true);
 
                 // load all controllers
                 new ToolBarController();
+                new OprationBarController(); // saeed : changed
                 new MenuBarController();
-
                 // controllers methods
                 addListners();
             }
         };
         runThread.start();
-
 
     }
 
@@ -61,13 +62,18 @@ public class MainGuiController {
 
     /**
      * get called when user try to closes the window
+     * 
      * @param evt
      */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {
         mainGuiView.showConfirm("sure?");
     }
 
-
+    /**
+     * Start sharing the application between client and the server   
+     * @param clientAddress
+     * @param clientPort
+     */
     public void startListening(String clientAddress, int clientPort) {
         client = new Client(clientAddress, clientPort);
 
@@ -77,8 +83,8 @@ public class MainGuiController {
             return;
         }
 
-        mainGuiView.showMessage("Connection successful" +
-                "\nConnecting to " + clientAddress + ":" + clientPort + "...");
+        mainGuiView
+                .showMessage("Connection successful" + "\nConnecting to " + clientAddress + ":" + clientPort + "...");
 
         listenThread = new Thread() {
             public void run() {
@@ -108,8 +114,7 @@ public class MainGuiController {
         client.send(json.toXML(data).getBytes());
     }
 
-
-    public void toShapes(String jsonStr){
+    public void toShapes(String jsonStr) {
         DataOfShapes data;
         XStream json = new XStream(new JettisonMappedXmlDriver());
         json.alias("data", DataOfShapes.class);
