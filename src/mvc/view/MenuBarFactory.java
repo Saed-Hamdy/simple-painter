@@ -27,6 +27,7 @@ public class MenuBarFactory {
     private JMenuItem addPluginMenuItem;
     private JMenuItem openMenuItem;
     private JMenuItem setLimitMenuItem;
+    private JMenuItem startServerMenuItem;
     private JMenuItem sharedPainterMenuItem;
     private JMenuItem about;
 
@@ -63,6 +64,7 @@ public class MenuBarFactory {
 
         addPluginMenuItem = new JMenuItem("Add plug-in");
         setLimitMenuItem = new JMenuItem("Set history limit");
+        startServerMenuItem = new JMenuItem("Start a server");
         sharedPainterMenuItem = new JMenuItem("Share your painter");
 
         about = new JMenuItem("About");
@@ -81,6 +83,7 @@ public class MenuBarFactory {
 
         toolsMenu.add(addPluginMenuItem);
         toolsMenu.add(setLimitMenuItem);
+        toolsMenu.add(startServerMenuItem);
         toolsMenu.add(sharedPainterMenuItem);
 
         helpMenu.add(about);
@@ -103,6 +106,7 @@ public class MenuBarFactory {
 
             Image addPluginIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/addPluginIcon.png"));
             Image setHistoryLimitIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/setHistoryLimitIcon.png"));
+            Image startServerIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/startServerIcon.png"));
             Image sharePainterIcon = ImageIO.read(getClass().getResource("/resources/menubar/toolsMenu/sharePainterIcon.png"));
 
             Image aboutIcon = ImageIO.read(getClass().getResource("/resources/menubar/helpMenu/aboutIcon.png"));
@@ -116,6 +120,7 @@ public class MenuBarFactory {
 
             addPluginMenuItem.setIcon(new ImageIcon(addPluginIcon));
             setLimitMenuItem.setIcon(new ImageIcon(setHistoryLimitIcon));
+            startServerMenuItem.setIcon(new ImageIcon(startServerIcon));
             sharedPainterMenuItem.setIcon(new ImageIcon(sharePainterIcon));
 
             about.setIcon(new ImageIcon(aboutIcon));

@@ -3,31 +3,22 @@ package server;
 /**
  * Created by ahmedyakout on 11/1/16.
  */
+import mvc.view.MainGuiView;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Server implements Runnable {
-    private Map<Integer, ServerClient> clients = new ConcurrentHashMap<>();
-    private List<Integer> checks = new ArrayList<>();
+    private List<ServerClient> clients = new CopyOnWriteArrayList<>();
     private DatagramSocket socket;
     private int port;
-    private boolean on = false, raw = false;
-    private String userlist = "/u/";
+    private Thread runThread, sendThread, receiveThread;
 
-    private Thread runThread, manageThread, sendThread, receiveThread;
-
-    private final int MAX_ATTEMPTS = 5;
-    private Scanner scanner;
 
     public Server(int serverPort) {
         port = serverPort;
@@ -42,68 +33,27 @@ public class Server implements Runnable {
     }
 
     public void run() {
-        on = true;
-        System.out.println("Server started on port " + port);
-        manageClients();
+        MainGuiView.getMainGuiView().showMessage("Server started on port " + port);
         receive();
-        scanner = new Scanner(System.in);
-        while (on) {
-            String text = scanner.nextLine();
-            if (!text.startsWith("/")) {
-                if (!text.equals("raw"))
-                    sendToClients("/m/Server: " + text);
-            }
-            if (text.equals("raw")) {
-                raw = !raw;
-            }
-        }
-    }
-
-    private void manageClients() {
-        manageThread = new Thread("Manage") {
-            public void run() {
-                while (on) {
-                    sendToClients("/i/check");
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (clients.size() != checks.size()) {
-                        java.util.Iterator<Map.Entry<Integer, ServerClient>> it = clients.entrySet().iterator();
-                        while (it.hasNext()) {
-                            Map.Entry<Integer, ServerClient> entry = it.next();
-                            ServerClient client = entry.getValue();
-                            if (!checks.contains(client.getID())) {
-                                if (client.getAttempts() >= MAX_ATTEMPTS) {
-                                    disconnect(client.getID(), true);
-                                } else {
-                                    client.incrementAttempts();
-                                }
-                            } else {
-                                client.setAttempt(0);
-                            }
-                            checks.remove((Integer) client.getID());
-                        }
-                    }
-                }
-            }
-        };
-        manageThread.start();
     }
 
     private void receive() {
         receiveThread = new Thread("Receive") {
             public void run() {
-                while (on) {
-                    byte[] data = new byte[1024];
+                while (true) {
+                    byte[] data = new byte[6400];
                     DatagramPacket packet = new DatagramPacket(data, data.length);
                     try {
                         socket.receive(packet);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    process(packet);
+                    String packetString = new String(packet.getData());
+                    if (packetString.startsWith("Request")) {
+                        clients.add(new ServerClient(packet.getAddress(), packet.getPort()));
+                        continue;
+                    }
+                    sendToClients(packetString);
                 }
 
             }
@@ -111,34 +61,9 @@ public class Server implements Runnable {
         receiveThread.start();
     }
 
-    private void process(DatagramPacket packet) {
-        String packetString = new String(packet.getData());
-        if (packetString.startsWith("/c/")) {
-            String name = packetString.substring(3, packetString.length()).trim();
-            int id = new Random().nextInt(Integer.MAX_VALUE);
-            clients.put(id, new ServerClient(name, packet.getAddress(), packet.getPort(), id));
-            String idString = "/c/" + id;
-            send(idString.getBytes(), packet.getAddress(), packet.getPort());
-            userlist += name + "\n";
-            sendToClients(userlist);
-
-        } else if (packetString.startsWith("/m/")) {
-            sendToClients(packetString);
-        } else if (packetString.startsWith("/d/")) {
-            int idDisconnect = Integer.parseInt(packetString.substring(3, packetString.length()).trim());
-            disconnect(idDisconnect, false);
-        } else if (packetString.startsWith("/i/")) {
-            checks.add(Integer.parseInt(packetString.substring(3, packetString.length()).trim()));
-        }
-    }
-
     private void sendToClients(String packetString) {
-        if (raw)
-            System.out.println(packetString);
-        Iterator<Map.Entry<Integer, ServerClient>> it = clients.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Integer, ServerClient> entry = it.next();
-            ServerClient client = entry.getValue();
+        for (int i = 0; i < clients.size(); i++) {
+            ServerClient client = clients.get(i);
             send(packetString.getBytes(), client.getAddress(), client.getPort());
         }
     }
@@ -155,24 +80,5 @@ public class Server implements Runnable {
             }
         };
         sendThread.start();
-    }
-
-    private void disconnect(int idDisconnect, boolean timeout) {
-        String name = clients.get(idDisconnect).getUsername();
-        clients.remove(idDisconnect);
-        String message = "";
-        if (timeout) {
-            message = name + " has timed out!";
-        } else {
-            message = name + " has disconnected!";
-        }
-        sendToClients("/m/" + message);
-        userlist = "/u/";
-        Iterator<Map.Entry<Integer, ServerClient>> it = clients.entrySet().iterator();
-        while (it.hasNext()) {
-            ServerClient client = it.next().getValue();
-            userlist += client.getUsername() + "\n";
-        }
-        sendToClients(userlist);
     }
 }

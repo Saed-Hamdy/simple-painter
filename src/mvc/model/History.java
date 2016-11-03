@@ -67,7 +67,9 @@ public class History {
         primaryHistoryStack.push(Model.getModel().cloneShapes(Model.getModel().getShapes()));
         secondaryHistoryStack.clear();
 
-        MainGuiController.getMainGuiController().sendShapes();
+        if (MainGuiController.getMainGuiController().getClient() != null) {
+            MainGuiController.getMainGuiController().sendShapes();
+        }
     }
 
     /**

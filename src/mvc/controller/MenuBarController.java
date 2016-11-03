@@ -4,9 +4,7 @@ import mvc.model.History;
 import mvc.model.Model;
 import mvc.model.RedoCommand;
 import mvc.model.UndoCommand;
-import mvc.view.MainGuiView;
-import mvc.view.MenuBarFactory;
-import mvc.view.ToolBarFactory;
+import mvc.view.*;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -17,10 +15,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-
-import mvc.view.OpenFile;
-import mvc.view.SaveFile;
-import server.Login;
 
 /**
  * Created by ahmedyakout on 10/26/16.
@@ -105,7 +99,6 @@ public class MenuBarController {
                                         e1.printStackTrace();
                                         mainGuiView.showError(e1.toString());
                                     }
-
                                     // Model.loadNewShape(directory + "." + fileName);
                                 } else {
                                     System.out.println("canceled");
@@ -165,8 +158,15 @@ public class MenuBarController {
                     case "Share your painter":
                         menuItem.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
-                                JFrame login = new Login();
-                                login.setVisible(true);
+                                new SharePainterWindow().setVisible(true);
+                            }
+                        });
+                        break;
+
+                    case "Start a server":
+                        menuItem.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                new StartServerWindow().setVisible(true);
                             }
                         });
                         break;

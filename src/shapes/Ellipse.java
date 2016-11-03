@@ -12,6 +12,10 @@ public class Ellipse implements Shape {
     private Color color = Color.black;
     private Color fillColor = null;
 
+    public Ellipse() {
+
+    }
+
     public Ellipse(Point location, Dimensions dimensions) {
         color = PainterPanelController.selectedColor;
         this.location = location;

@@ -27,7 +27,7 @@ import mvc.view.OpenFile;
 public class PainterPanelController extends JPanel implements MouseListener, MouseMotionListener {
     private int currentX, currentY;
     private int oldX, oldY;
-    private Shape currentShape, oldshape; // TODO remove oldashape
+    private Shape currentShape;
     public static Color selectedColor = Color.black;
 
     public List<Shape> selectedShapes = new ArrayList<>(); // for select operation
@@ -52,6 +52,14 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
         return singeltonPainterPanel;
     }
 
+    public Shape getCurrentShape() {
+        return currentShape;
+    }
+
+    public void setCurrentShape(Shape currentShape) {
+        this.currentShape = currentShape;
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -74,7 +82,6 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                 Rectangle rectangle = new Rectangle(new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
                         new Dimensions(calculateWidth(), calculateHeight()));
                 currentShape = rectangle;
-
                 rectangle.draw(g);
                 break;
             case DrawOval:
@@ -106,7 +113,8 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                         Shape shape = (Shape) constructor.newInstance(
                                 new Point(Math.min(oldX, currentX), Math.min(oldY, currentY)),
                                 new Dimensions(calculateWidth(), calculateHeight()));
-
+                        currentShape = shape;
+                        currentShape.draw(g);
                     }
                 } catch (InstantiationException e) {
                     e.printStackTrace();
@@ -274,7 +282,6 @@ public class PainterPanelController extends JPanel implements MouseListener, Mou
                     shapes.add(currentShape);
                     didChange = true;
                     currentShape = null;
-                    // TODO: changed
                 }
 
         }

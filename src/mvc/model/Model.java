@@ -59,6 +59,7 @@ public class Model {
     }
 
     public static void loadNewShape(String fileName) {
+        // TODO
         try {
             ClassLoader.getSystemClassLoader().loadClass(fileName);
             // Shape rectangle = (Shape) ClassLoader.getSystemClassLoader().loadClass("shapes.Rectangle").newInstance();
@@ -82,10 +83,5 @@ public class Model {
         suppotedShapesClassFiles.put(key, value);
     }
 
-    void persistIntoJson() {
-    }
-
-    void persistIntoXml() {
-    }
 }
 

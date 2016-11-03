@@ -49,7 +49,6 @@ public class OpenFile extends JFrame {
                     MainGuiView.getMainGuiView().repaint();
 
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
 
@@ -64,7 +63,6 @@ public class OpenFile extends JFrame {
                     MainGuiView.getMainGuiView().repaint();
 
                 } catch (Exception e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }

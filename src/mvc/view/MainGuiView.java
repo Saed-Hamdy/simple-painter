@@ -1,5 +1,6 @@
 package mvc.view;
 
+import mvc.controller.MainGuiController;
 import mvc.controller.PainterPanelController;
 import mvc.model.Model;
 import server.Client;
@@ -76,9 +77,16 @@ public class MainGuiView extends JFrame {
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(null, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public void showConfirm(String message) {
         int selectedValue = JOptionPane.showConfirmDialog(null, message, "", JOptionPane.YES_NO_OPTION);
         if (selectedValue == JOptionPane.YES_OPTION) {
+            if (MainGuiController.getMainGuiController().getClient() != null) {
+                MainGuiController.getMainGuiController().getClient().close();
+            }
             System.exit(0);
         }
     }
